@@ -8,33 +8,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import pb from "@/lib/pocketbase"
+import Link from "next/link";
 
-const papers = [
-    {
-        id: "1",
-        title: "MetaAnalysis tool",
-        authors: "Wallner et al.",
-        date: "10.06.2024",
-    },
-    {
-        id: "2",
-        title: "ERP Process tools for SMEs",
-        authors: "Stadler et al.",
-        date: "10.06.2024",
-    },
-    {
-        id: "3",
-        title: "Design Science Research: A Methodology for Engineering Productive Information Systems",
-        authors: "Peffers et al.",
-        date: "12.04.1997",
-    },
-    {
-        id: "4",
-        title: "Paper 4",
-        authors: "Author 4",
-        date: "10.06.2024",
-    },
-]
+const papers = await pb.collection('papers').getFullList({
+    sort: '-created',
+});
+
 
 export function PapersTable() {
     return (
@@ -42,7 +22,7 @@ export function PapersTable() {
             <TableCaption>A list of your uploaded papers</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Papers</TableHead>
+                    <TableHead className="w-[100px]">ID</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Authors</TableHead>
                     <TableHead className="text-right">Date</TableHead>
@@ -51,8 +31,10 @@ export function PapersTable() {
             <TableBody>
                 {papers.map((paper) => (
                     <TableRow key={paper.id}>
-                        <TableCell className="font-medium">{paper.id}</TableCell>
-                        <TableCell>{paper.title}</TableCell>
+                        <TableCell >{paper.id}</TableCell>
+                        <TableCell className="font-medium underline">
+                            <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
+                        </TableCell>
                         <TableCell>{paper.authors}</TableCell>
                         <TableCell className="text-right">{paper.date}</TableCell>
                     </TableRow>

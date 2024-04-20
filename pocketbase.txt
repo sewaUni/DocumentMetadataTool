@@ -1,0 +1,5 @@
+Start pocketbase: ./pocketbase serve
+
+Pocketbase Login:
+admin@email.com
+password123
