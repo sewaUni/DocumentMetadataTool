@@ -10,10 +10,9 @@ import {
 } from "@/components/ui/table"
 import pb from "@/lib/pocketbase"
 import Link from "next/link";
+import {fetchAuthorNames} from "@/lib/data";
 
-const papers = await pb.collection('papers').getFullList({
-    sort: '-created',
-});
+
 
 
 export function PapersTable() {
@@ -35,8 +34,8 @@ export function PapersTable() {
                         <TableCell className="font-medium underline">
                             <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
                         </TableCell>
-                        <TableCell>{paper.authors}</TableCell>
-                        <TableCell className="text-right">{paper.date}</TableCell>
+                        <TableCell>{fetchAuthorNames(paper.authors)}</TableCell>
+                        <TableCell className="text-right">{new Date(paper.date).toLocaleDateString()}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

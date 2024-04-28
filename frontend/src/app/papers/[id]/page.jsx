@@ -1,15 +1,54 @@
 import pb from "@/lib/pocketbase"
+import {fetchAuthorNames, fetchPaper} from "@/lib/data";
 
 
-export default async function PaperPage ({params}) {
-    const record = await pb.collection('papers').getOne(params.id);
+export default async function PaperPage({params}) {
+    const paper = await fetchPaper(params.id)
 
     return (
-        <>
-            <h1 className="font-bold text-2xl p-4">{record.title}</h1>
-            <p>{record.authors}</p>
-            <p>{record.date}</p>
-            <p>{record.abstract}</p>
-        </>
-    )
+        <div className="p-6">
+            <h2 className="text-2xl font-bold mb-4">{paper.title}</h2>
+            <p className="text-gray-700 mb-4">{paper.abstract}</p>
+            <div className="flex flex-wrap items-center mb-4">
+        <span className="mr-4">
+          <strong>Authors:</strong> {await fetchAuthorNames(paper.authors)}
+        </span>
+                <span className="mr-4">
+          <strong>Course:</strong> {paper.course}
+        </span>
+                <span className="mr-4">
+          <strong>Language:</strong> {paper.language}
+        </span>
+            </div>
+            <div className="flex flex-wrap items-center mb-4">
+        <span className="mr-4">
+          <strong>Pages:</strong> {paper.pages}
+        </span>
+                <span className="mr-4">
+          <strong>Methodology:</strong> {paper.methodology}
+        </span>
+                <span className="mr-4">
+          <strong>Project Partner:</strong> {paper.project_partner}
+        </span>
+            </div>
+            <div className="flex flex-wrap items-center mb-4">
+        <span className="mr-4">
+          <strong>Created:</strong> {new Date(paper.created).toLocaleDateString()}
+        </span>
+                <span className="mr-4">
+          <strong>Last Updated:</strong> {new Date(paper.updated).toLocaleDateString()}
+        </span>
+                <span className="mr-4">
+          <strong>Publication Date:</strong> {new Date(paper.date).toLocaleDateString()}
+        </span>
+            </div>
+            <div className="flex flex-wrap items-center">
+        <span className="mr-4">
+          <strong>Word Count:</strong> {paper.word_count}
+        </span>
+                <span className="mr-4">
+          <strong>Collection:</strong> {paper.collectionName}
+        </span>
+            </div>
+        </div>)
 }
