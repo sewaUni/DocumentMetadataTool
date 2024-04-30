@@ -1,5 +1,6 @@
 import pb from "@/lib/pocketbase"
 import {fetchAuthorNames, fetchPaper} from "@/lib/data";
+import {AuthorLinks} from "@/components/ui/authorLinks";
 
 
 export default async function PaperPage({params}) {
@@ -11,7 +12,7 @@ export default async function PaperPage({params}) {
             <p className="text-gray-700 mb-4">{paper.abstract}</p>
             <div className="flex flex-wrap items-center mb-4">
         <span className="mr-4">
-          <strong>Authors:</strong> {await fetchAuthorNames(paper.authors)}
+          <strong>Authors:</strong> <AuthorLinks authorIds={paper.authors}/>
         </span>
                 <span className="mr-4">
           <strong>Course:</strong> {paper.course}

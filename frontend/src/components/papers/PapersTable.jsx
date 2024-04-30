@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/table"
 import pb from "@/lib/pocketbase"
 import Link from "next/link";
-import {fetchAuthorNames} from "@/lib/data";
+import {fetchAllPapers, fetchAuthorNames, fetchAuthors} from "@/lib/data";
+import {AuthorLinks} from "@/components/ui/authorLinks";
 
 
-
+const papers = await fetchAllPapers();
 
 export function PapersTable() {
     return (
@@ -34,7 +35,9 @@ export function PapersTable() {
                         <TableCell className="font-medium underline">
                             <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
                         </TableCell>
-                        <TableCell>{fetchAuthorNames(paper.authors)}</TableCell>
+                        <TableCell>
+                            <AuthorLinks authorIds={paper.authors}/>
+                        </TableCell>
                         <TableCell className="text-right">{new Date(paper.date).toLocaleDateString()}</TableCell>
                     </TableRow>
                 ))}
@@ -48,3 +51,4 @@ export function PapersTable() {
         </Table>
     )
 }
+
