@@ -53,7 +53,7 @@ export default function NavBar() {
       </div>
       <div>
         <Avatar>
-          <AvatarImage src="https://github.com/koracs.png" alt="@shadcn" />
+          <AvatarImage src="https://github.com/koracs.png" alt="@koracs" />
           <AvatarFallback>FS</AvatarFallback>
         </Avatar>
       </div>
