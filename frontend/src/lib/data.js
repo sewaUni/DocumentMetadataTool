@@ -52,18 +52,37 @@ export async function fetchAuthorNames(authorIds) {
 }
 
 export async function fetchAuthors(authorIds) {
-  const authorObjects = [];
+  const authors = [];
 
   await Promise.all(
-    authorIds.map(async (author) => {
-      const authorData = await pb.collection("person").getOne(author);
-      authorObjects.push({
+    authorIds.map(async (a) => {
+      const authorData = await pb.collection("person").getOne(a);
+      authors.push({
         id: authorData.id,
         name: authorData.name,
       });
     }),
   );
 
-  authorObjects.sort((a, b) => a.name.localeCompare(b.name));
-  return authorObjects;
+  authors.sort((a, b) => a.name.localeCompare(b.name));
+  return authors;
+}
+
+export async function fetchUsedLiterature(literatureIds) {
+  const literature = [];
+
+  await Promise.all(
+    literatureIds.map(async (l) => {
+      const literatureData = await pb.collection("literature").getOne(l);
+      literature.push(literatureData);
+    }),
+  );
+
+  literature.sort((a, b) => a.title.localeCompare(b.title));
+  return literature;
+}
+
+export async function fetchPaperPages() {
+  const papers = await fetchAllPapers(); //todo inefficient to fetch all papers
+  return Math.ceil(papers.length / PAPERS_PER_PAGE);
 }

@@ -20,7 +20,6 @@ export async function PapersTable({ query, currentPage, author }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">ID</TableHead>
           <TableHead>Title</TableHead>
           <TableHead>Authors</TableHead>
           <TableHead className="text-right">Date</TableHead>
@@ -29,7 +28,6 @@ export async function PapersTable({ query, currentPage, author }) {
       <TableBody>
         {papers.map((paper) => (
           <TableRow key={paper.id}>
-            <TableCell>{paper.id}</TableCell>
             <TableCell className="font-medium underline">
               <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
             </TableCell>
@@ -42,12 +40,6 @@ export async function PapersTable({ query, currentPage, author }) {
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{papers.length}</TableCell>
-        </TableRow>
-      </TableFooter>
     </Table>
   );
 }
