@@ -22,8 +22,8 @@ export default async function PapersPage({ searchParams }) {
       </div>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <PapersTable query={query} currentPage={currentPage} />
-        <div className="p-4">
+        <div className="flex w-full flex-col items-center justify-between gap-2 p-4">
+          <PapersTable query={query} currentPage={currentPage} />
           <PaperPagination totalPages={totalPages} />
         </div>
       </Suspense>

@@ -17,29 +17,31 @@ export async function PapersTable({ query, currentPage, author }) {
     : await fetchFilteredPapers(query, currentPage);
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Authors</TableHead>
-          <TableHead className="text-right">Date</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {papers.map((paper) => (
-          <TableRow key={paper.id}>
-            <TableCell className="font-medium underline">
-              <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
-            </TableCell>
-            <TableCell>
-              <AuthorLinks authorIds={paper.authors} />
-            </TableCell>
-            <TableCell className="text-right">
-              {new Date(paper.date).toLocaleDateString()}
-            </TableCell>
+    <div className="w-full rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Title</TableHead>
+            <TableHead>Authors</TableHead>
+            <TableHead className="text-right">Date</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {papers.map((paper) => (
+            <TableRow key={paper.id}>
+              <TableCell className="font-medium underline">
+                <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
+              </TableCell>
+              <TableCell>
+                <AuthorLinks authorIds={paper.authors} />
+              </TableCell>
+              <TableCell className="text-right">
+                {new Date(paper.date).toLocaleDateString()}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
