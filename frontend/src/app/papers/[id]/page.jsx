@@ -1,6 +1,6 @@
 import pb from "@/lib/pocketbase"
 import {fetchAuthorNames, fetchPaper} from "@/lib/data";
-import {AuthorLinks} from "@/components/ui/authorLinks";
+import {AuthorLinks} from "@/components/papers/authorLinks";
 
 
 export default async function PaperPage({params}) {

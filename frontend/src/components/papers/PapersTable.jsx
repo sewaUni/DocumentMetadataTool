@@ -8,15 +8,16 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import pb from "@/lib/pocketbase"
 import Link from "next/link";
-import {fetchAllPapers, fetchAuthorNames, fetchAuthors} from "@/lib/data";
-import {AuthorLinks} from "@/components/ui/authorLinks";
+import {fetchAllPapers, fetchAuthorNames, fetchAuthors, fetchFilteredPapers} from "@/lib/data";
+import {AuthorLinks} from "@/components/papers/authorLinks";
 
 
-const papers = await fetchAllPapers();
 
-export function PapersTable() {
+
+export async function PapersTable({query, currentPage, author}) {
+    const papers = await fetchFilteredPapers(query, currentPage, author);
+
     return (
         <Table>
             <TableCaption>A list of your uploaded papers</TableCaption>

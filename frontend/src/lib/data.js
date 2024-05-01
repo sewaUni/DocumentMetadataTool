@@ -1,10 +1,31 @@
 import pb from "@/lib/pocketbase";
 
+const PAPERS_PER_PAGE = 10;
+
 export async function fetchAllPapers() {
     return await pb.collection('papers').getFullList({
         sort: '-created',
         cache: 'no-store'
     });
+}
+
+export async function fetchFilteredPapers(query, currentPage) {
+    const response = await pb.collection('papers').getList(currentPage, PAPERS_PER_PAGE,{
+        sort: '-created',
+        cache: 'no-store',
+        filter: 'title ~ "%' + query + '%"'
+    });
+
+    return response.items;
+}
+
+export async function fetchPapersByAuthor(authorId) {
+    return await pb.collection('papers').getFullList( {
+        sort: '-created',
+        cache: 'no-store',
+        filter: 'authors @> [' + authorId + ']'
+    });
+
 }
 
 export async function fetchPaper(id) {
