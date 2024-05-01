@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { redirect } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 async function searchAction(formData) {
   "use server";
@@ -51,6 +50,12 @@ export default function NavBar() {
             />
           </div>
         </form>
+      </div>
+      <div>
+        <Avatar>
+          <AvatarImage src="https://github.com/koracs.png" alt="@shadcn" />
+          <AvatarFallback>FS</AvatarFallback>
+        </Avatar>
       </div>
     </header>
   );
