@@ -28,7 +28,7 @@ export async function LiteratureTable({ literatureIds }) {
         <TableBody>
           {literature.map((paper) => (
             <TableRow key={paper.id}>
-              <TableCell className="font-medium">{paper.title}</TableCell>
+              <TableCell className="font-bold">{paper.title}</TableCell>
               <TableCell>{paper.authors}</TableCell>
               <TableCell>{new Date(paper.date).toLocaleDateString()}</TableCell>
               <TableCell>{paper.doi}</TableCell>

@@ -1,0 +1,145 @@
+import { AuthorLinks } from "@/components/papers/authorLinks";
+import { LiteratureTable } from "@/components/papers/LiteratureTable";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { fetchPaper } from "@/lib/data";
+import Link from "next/link";
+
+async function updateAction(formData) {
+  "use server";
+  // const object = {}; //todo maybe needed to update lists (Authors, Literature)
+  // formData.forEach((value, key) => {
+  //   // Reflect.has in favor of: object.hasOwnProperty(key)
+  //   if (!Reflect.has(object, key)) {
+  //     object[key] = value;
+  //     return;
+  //   }
+  //   if (!Array.isArray(object[key])) {
+  //     object[key] = [object[key]];
+  //   }
+  //   object[key].push(value);
+  // });
+  const json = JSON.stringify(Object.fromEntries(formData));
+  console.log(json);
+}
+
+export default async function EditPaperPage({ params }) {
+  const paper = await fetchPaper(params.id);
+
+  return (
+    <>
+      <form className="contents w-full rounded-md border" action={updateAction}>
+        <input
+          className="m-4 rounded-md border p-2 text-center text-4xl font-bold"
+          type="text"
+          name="title"
+          defaultValue={paper.title}
+        />
+        <Link className={buttonVariants()} href={`/papers/${params.id}`}>
+          Back
+        </Link>
+        <Button type="submit" className="">
+          Save
+        </Button>
+        <div className="flex flex-wrap items-center justify-center gap-8 py-2">
+          <label className="flex flex-col">
+            <span>
+              <strong>Publication Date:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="date"
+              name="date"
+              defaultValue={new Date(paper.date).toLocaleDateString("en-CA")}
+            />
+          </label>
+          <label className="flex flex-col">
+            <span>
+              <strong>Project Partner:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="text"
+              name="project_partner"
+              defaultValue={paper.project_partner}
+            />
+          </label>
+          <label className="flex flex-col">
+            <span>
+              <strong>Course:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="text"
+              name="course"
+              defaultValue={paper.course}
+            />
+          </label>
+        </div>
+        <textarea
+          className="h-60 w-3/5 rounded-md border px-4 py-2 text-justify text-gray-700"
+          name="abstract"
+          defaultValue={paper.abstract}
+        ></textarea>
+        <div className="flex flex-col flex-wrap items-center justify-center pb-4">
+          <h2 className="py-4 text-center text-2xl font-bold">Authors</h2>
+          <AuthorLinks authorIds={paper.authors} />
+        </div>
+        <div className="flex flex-wrap items-center gap-8">
+          <label className="flex flex-col">
+            <span>
+              <strong>Language:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="text"
+              name="language"
+              defaultValue={paper.language}
+            />
+          </label>
+          <label className="flex flex-col">
+            <span>
+              <strong>Methodology:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="text"
+              name="methodology"
+              defaultValue={paper.methodology}
+            />
+          </label>
+        </div>
+        <div className="flex flex-wrap items-center gap-8">
+          <label className="flex flex-col">
+            <span>
+              <strong>Pages:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="number"
+              name="pages"
+              defaultValue={paper.pages}
+            />
+          </label>
+          <label className="flex flex-col">
+            <span>
+              <strong>Word Count:</strong>
+            </span>
+            <input
+              className="rounded-md border p-2"
+              type="number"
+              name="word_count"
+              defaultValue={paper.word_count}
+            />
+          </label>
+        </div>
+        <div className="w-3/5 py-10">
+          <h2 className="py-4 text-center text-2xl font-bold">
+            Used Literature
+          </h2>
+          {/* Assuming LiteratureTable component handles editing */}
+          <LiteratureTable literatureIds={paper.literature} />
+        </div>
+      </form>
+    </>
+  );
+}
