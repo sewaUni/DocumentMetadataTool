@@ -13,12 +13,12 @@ export default async function PaperPage({ params }) {
 
   return (
     <>
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between px-6">
         <div className="basis-1/6"></div>
         <h1 className={"grow py-6 text-center text-4xl font-bold"}>
           {paper.title}
         </h1>
-        <div className="basis-1/6 content-center text-center">
+        <div className="basis-1/6 content-center text-right">
           <Link className={buttonVariants()} href={`/papers/${params.id}/edit`}>
             Edit Metadata
           </Link>

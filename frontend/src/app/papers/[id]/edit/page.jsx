@@ -33,7 +33,7 @@ export default async function EditPaperPage({ params }) {
     <>
       <form className="contents w-full rounded-md border" action={updateAction}>
         <input type="hidden" value={paper.id} name="id" />
-        <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex w-full items-center justify-between gap-2 px-6">
           <div className="basis-1/6"></div>
           <input
             className="m-4 grow rounded-md border p-2 text-center text-4xl font-bold"
@@ -41,7 +41,7 @@ export default async function EditPaperPage({ params }) {
             name="title"
             defaultValue={paper.title}
           />
-          <div className="flex basis-1/6 content-center gap-2 text-center">
+          <div className="flex basis-1/6 content-center justify-end gap-2">
             <Link
               className={buttonVariants({ variant: "secondary" })}
               href={`/papers/${params.id}`}

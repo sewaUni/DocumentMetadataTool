@@ -101,3 +101,17 @@ export async function updatePaper(paper) {
     };
   }
 }
+
+export async function updateAuthor(author) {
+  try {
+    const result = await pb.collection("person").update(author.id, author);
+
+    revalidatePath("/authors/" + author.id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
