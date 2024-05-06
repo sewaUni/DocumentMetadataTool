@@ -1,8 +1,9 @@
 import { AuthorLinks } from "@/components/papers/authorLinks";
 import { LiteratureTable } from "@/components/papers/LiteratureTable";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { fetchPaper } from "@/lib/data";
+import { fetchPaper, updatePaper } from "@/lib/data";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 async function updateAction(formData) {
   "use server";
@@ -18,8 +19,11 @@ async function updateAction(formData) {
   //   }
   //   object[key].push(value);
   // });
-  const json = JSON.stringify(Object.fromEntries(formData));
-  console.log(json);
+  const json = Object.fromEntries(formData);
+  // console.log(json);
+
+  const result = await updatePaper(json); //todo could implement error handling
+  redirect(`/papers/${json.id}`);
 }
 
 export default async function EditPaperPage({ params }) {
@@ -28,18 +32,27 @@ export default async function EditPaperPage({ params }) {
   return (
     <>
       <form className="contents w-full rounded-md border" action={updateAction}>
-        <input
-          className="m-4 rounded-md border p-2 text-center text-4xl font-bold"
-          type="text"
-          name="title"
-          defaultValue={paper.title}
-        />
-        <Link className={buttonVariants()} href={`/papers/${params.id}`}>
-          Back
-        </Link>
-        <Button type="submit" className="">
-          Save
-        </Button>
+        <input type="hidden" value={paper.id} name="id" />
+        <div className="flex w-full items-center justify-between gap-2">
+          <div className="basis-1/6"></div>
+          <input
+            className="m-4 grow rounded-md border p-2 text-center text-4xl font-bold"
+            type="text"
+            name="title"
+            defaultValue={paper.title}
+          />
+          <div className="flex basis-1/6 content-center gap-2 text-center">
+            <Link
+              className={buttonVariants({ variant: "secondary" })}
+              href={`/papers/${params.id}`}
+            >
+              Back
+            </Link>
+            <Button type="submit" className="">
+              Save
+            </Button>
+          </div>
+        </div>
         <div className="flex flex-wrap items-center justify-center gap-8 py-2">
           <label className="flex flex-col">
             <span>

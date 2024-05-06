@@ -10,9 +10,6 @@ export default async function AuthorPage({ params }) {
       <h1 className={"p-4 text-4xl font-bold"}>Papers by {author.name}</h1>
       <div className="flex flex-row flex-wrap justify-center gap-4 p-4">
         <span>
-          <strong>Author ID:</strong> {author.id}
-        </span>
-        <span>
           <strong>Role:</strong> {author.person_type}
         </span>
         <span>
@@ -28,7 +25,9 @@ export default async function AuthorPage({ params }) {
       </div>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <PapersTable author={author.id} />
+        <div className="flex w-full flex-col items-center justify-between gap-2 px-4">
+          <PapersTable author={author.id} />
+        </div>
       </Suspense>
     </>
   );

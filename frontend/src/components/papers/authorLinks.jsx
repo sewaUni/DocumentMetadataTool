@@ -8,7 +8,7 @@ export async function AuthorLinks({ authorIds }) {
       {authors.map((author) => (
         <div
           key={author.id}
-          className="w-fit rounded-xl bg-accent px-2 py-1 transition duration-150 ease-in-out hover:bg-neutral-300"
+          className="w-fit whitespace-nowrap rounded-xl bg-accent px-2 py-1 transition duration-150 ease-in-out hover:bg-neutral-300"
         >
           <Link key={author.id} href={`/authors/${author.id}`}>
             {author.name}
