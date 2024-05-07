@@ -3,6 +3,7 @@ import { AuthorLinks } from "@/components/papers/authorLinks";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LiteratureTable } from "@/components/papers/LiteratureTable";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default async function PaperPage({ params }) {
   const paper = await fetchPaper(params.id);
@@ -12,10 +13,17 @@ export default async function PaperPage({ params }) {
 
   return (
     <>
-      <h1 className={"p-6 text-4xl font-bold"}>{paper.title}</h1>
-      <Link className={buttonVariants()} href={`/papers/${params.id}/edit`}>
-        Edit Metadata
-      </Link>
+      <div className="flex w-full items-center justify-between px-6">
+        <div className="basis-1/6"></div>
+        <h1 className={"grow py-6 text-center text-4xl font-bold"}>
+          {paper.title}
+        </h1>
+        <div className="basis-1/6 content-center text-right">
+          <Link className={buttonVariants()} href={`/papers/${params.id}/edit`}>
+            Edit Metadata
+          </Link>
+        </div>
+      </div>
       <div className="flex flex-wrap items-center justify-center gap-8 py-2">
         <span>
           <strong>Publication Date:</strong>{" "}

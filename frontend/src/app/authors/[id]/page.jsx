@@ -1,17 +1,29 @@
 import { fetchAuthor, fetchAuthors } from "@/lib/data";
 import { Suspense } from "react";
 import { PapersTable } from "@/components/papers/PapersTable";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function AuthorPage({ params }) {
   const author = await fetchAuthor(params.id);
 
   return (
     <>
-      <h1 className={"p-4 text-4xl font-bold"}>Papers by {author.name}</h1>
+      <div className="flex w-full items-center justify-between px-6">
+        <div className="basis-1/6"></div>
+        <h1 className={"grow py-6 text-center text-4xl font-bold"}>
+          Papers by {author.name}
+        </h1>
+        <div className="basis-1/6 content-center text-right">
+          <Link
+            className={buttonVariants()}
+            href={`/authors/${params.id}/edit`}
+          >
+            Edit Author
+          </Link>
+        </div>
+      </div>
       <div className="flex flex-row flex-wrap justify-center gap-4 p-4">
-        <span>
-          <strong>Author ID:</strong> {author.id}
-        </span>
         <span>
           <strong>Role:</strong> {author.person_type}
         </span>
@@ -28,7 +40,9 @@ export default async function AuthorPage({ params }) {
       </div>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <PapersTable author={author.id} />
+        <div className="flex w-full flex-col items-center justify-between gap-2 px-4">
+          <PapersTable author={author.id} />
+        </div>
       </Suspense>
     </>
   );

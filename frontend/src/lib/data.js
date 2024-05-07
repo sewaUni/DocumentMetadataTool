@@ -1,4 +1,5 @@
 import pb from "@/lib/pocketbase";
+import { revalidatePath } from "next/cache";
 
 const PAPERS_PER_PAGE = 10;
 
@@ -85,4 +86,32 @@ export async function fetchUsedLiterature(literatureIds) {
 export async function fetchPaperPages() {
   const papers = await fetchAllPapers(); //todo inefficient to fetch all papers
   return Math.ceil(papers.length / PAPERS_PER_PAGE);
+}
+
+export async function updatePaper(paper) {
+  try {
+    const result = await pb.collection("papers").update(paper.id, paper);
+
+    revalidatePath("/papers/" + paper.id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
+export async function updateAuthor(author) {
+  try {
+    const result = await pb.collection("person").update(author.id, author);
+
+    revalidatePath("/authors/" + author.id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
 }
