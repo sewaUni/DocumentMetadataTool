@@ -68,7 +68,7 @@ export function AuthorLinksEditable({ authorIds }) {
 
     return (
         <>
-        <div className="flex flex-row gap-1">
+            <div className="flex flex-row gap-1">
             {authors.map((author) => (
                 <div
                     key={author.id}
@@ -83,6 +83,7 @@ export function AuthorLinksEditable({ authorIds }) {
                 </div>
             ))}
         </div>
+            <Dialog>
             <DropdownMenu open={open} onOpenChange={setOpen}>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -94,7 +95,9 @@ export function AuthorLinksEditable({ authorIds }) {
                     <DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            Add New
+                            <DialogTrigger>
+                                Add new Author
+                            </DialogTrigger>
                         </DropdownMenuItem>
                         <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
@@ -128,12 +131,6 @@ export function AuthorLinksEditable({ authorIds }) {
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
-
-
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline">Add new Author</Button>
-                </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>Add Author</DialogTitle>
