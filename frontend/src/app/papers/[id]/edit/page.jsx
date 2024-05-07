@@ -4,6 +4,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { fetchPaper, updatePaper } from "@/lib/data";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import {AuthorLinksEditable} from "@/components/papers/authorLinksEditable";
 
 async function updateAction(formData) {
   "use server";
@@ -95,7 +96,7 @@ export default async function EditPaperPage({ params }) {
         ></textarea>
         <div className="flex flex-col flex-wrap items-center justify-center pb-4">
           <h2 className="py-4 text-center text-2xl font-bold">Authors</h2>
-          <AuthorLinks authorIds={paper.authors} />
+          <AuthorLinksEditable authorIds={paper.authors} />
         </div>
         <div className="flex flex-wrap items-center gap-8">
           <label className="flex flex-col">
