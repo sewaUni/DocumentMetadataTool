@@ -21,7 +21,7 @@ export default async function AuthorPage({ params }) {
         <div className="flex w-full items-center justify-between gap-2 px-6">
           <div className="basis-1/6"></div>
           <input
-            className="m-4 grow rounded-md border p-2 text-center text-4xl font-bold"
+            className="m-4 rounded-md border p-2 text-center text-4xl font-bold"
             type="text"
             name="name"
             defaultValue={author.name}
@@ -38,7 +38,7 @@ export default async function AuthorPage({ params }) {
             </Button>
           </div>
         </div>
-        <div className="flex flex-row flex-wrap justify-center gap-4 p-4">
+        <div className="flex flex-row flex-wrap justify-center gap-4 p-4 items-center">
           <span>
             <strong>Role:</strong>
           </span>
