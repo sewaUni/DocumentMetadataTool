@@ -5,6 +5,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import PaperPagination from "@/components/papers/PaperPagination";
 import { fetchPaperPages } from "@/lib/data";
+import { Upload } from "lucide-react";
 
 export default async function PapersPage({ searchParams }) {
   const query = searchParams?.query || "";
@@ -17,7 +18,8 @@ export default async function PapersPage({ searchParams }) {
       <div className="flex w-full items-center justify-between gap-2 p-4">
         <Search placeholder={"Search Papers..."} />
         <Link className={buttonVariants()} href={"/upload"}>
-          Upload Papers
+          <Upload className="mr-2 h-4 w-4" />
+          Upload Paper
         </Link>
       </div>
 

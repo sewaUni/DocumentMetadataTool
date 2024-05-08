@@ -161,6 +161,16 @@ export default async function EditPaperPage({ params }) {
           {/* Assuming LiteratureTable component handles editing */}
           <LiteratureTable literatureIds={paper.literature} />
         </div>
+        <div className="flex w-3/5 flex-col items-center justify-center">
+          <h2 className="py-4 text-center text-2xl font-bold">
+            Additional Information
+          </h2>
+          <textarea
+            className="h-32 w-full rounded-md border bg-secondary px-4 py-2 text-justify text-gray-700"
+            name="infos"
+            defaultValue={paper.infos}
+          ></textarea>
+        </div>
       </form>
     </>
   );

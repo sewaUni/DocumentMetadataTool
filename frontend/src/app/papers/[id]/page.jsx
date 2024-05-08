@@ -69,6 +69,16 @@ export default async function PaperPage({ params }) {
         <h2 className="py-4 text-center text-2xl font-bold">Used Literature</h2>
         <LiteratureTable literatureIds={paper.literature} />
       </div>
+      {paper.infos ? (
+        <div className="w-3/5 py-10">
+          <h2 className="py-4 text-center text-2xl font-bold">
+            Additional Information
+          </h2>
+          <p className="w-3/5 py-2 text-justify text-gray-700">{paper.infos}</p>
+        </div>
+      ) : (
+        <></>
+      )}
       <Button className="m-4 text-xl">Download Full Paper</Button>
     </>
   );
