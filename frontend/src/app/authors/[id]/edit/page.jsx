@@ -1,4 +1,4 @@
-import { fetchAuthor, updateAuthor } from "@/lib/data";
+import { fetchPerson, updatePerson } from "@/lib/data";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { redirect } from "next/navigation";
@@ -7,12 +7,12 @@ async function updateAction(formData) {
   "use server";
   const json = Object.fromEntries(formData);
 
-  const result = await updateAuthor(json);
+  const result = await updatePerson(json);
   redirect(`/authors/${json.id}`);
 }
 
-export default async function AuthorPage({ params }) {
-  const author = await fetchAuthor(params.id);
+export default async function PersonPage({ params }) {
+  const author = await fetchPerson(params.id);
 
   return (
     <>
@@ -38,7 +38,7 @@ export default async function AuthorPage({ params }) {
             </Button>
           </div>
         </div>
-        <div className="flex flex-row flex-wrap justify-center gap-4 p-4 items-center">
+        <div className="flex flex-row flex-wrap items-center justify-center gap-4 p-4">
           <span>
             <strong>Role:</strong>
           </span>

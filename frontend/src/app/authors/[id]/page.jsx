@@ -1,18 +1,18 @@
-import { fetchAuthor, fetchAuthors } from "@/lib/data";
+import { fetchPerson } from "@/lib/data";
 import { Suspense } from "react";
 import { PapersTable } from "@/components/papers/PapersTable";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
-export default async function AuthorPage({ params }) {
-  const author = await fetchAuthor(params.id);
+export default async function PersonPage({ params }) {
+  const person = await fetchPerson(params.id);
 
   return (
     <>
       <div className="flex w-full items-center justify-between px-6">
         <div className="basis-1/6"></div>
         <h1 className={"grow py-6 text-center text-4xl font-bold"}>
-          Papers by {author.name}
+          Papers by {person.name}
         </h1>
         <div className="basis-1/6 content-center text-right">
           <Link
@@ -25,14 +25,14 @@ export default async function AuthorPage({ params }) {
       </div>
       <div className="flex flex-row flex-wrap justify-center gap-4 p-4">
         <span>
-          <strong>Role:</strong> {author.person_type}
+          <strong>Role:</strong> {person.person_type}
         </span>
         <span>
-          <strong>E-Mail:</strong> {author.email}
+          <strong>E-Mail:</strong> {person.email}
         </span>
-        {author.student_id ? (
+        {person.student_id ? (
           <span>
-            <strong>Student ID:</strong> {author.student_id}
+            <strong>Student ID:</strong> {person.student_id}
           </span>
         ) : (
           <></>
@@ -41,7 +41,7 @@ export default async function AuthorPage({ params }) {
 
       <Suspense fallback={<div>Loading...</div>}>
         <div className="flex w-full flex-col items-center justify-between gap-2 px-4">
-          <PapersTable author={author.id} />
+          <PapersTable person={person.id} />
         </div>
       </Suspense>
     </>

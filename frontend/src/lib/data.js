@@ -22,12 +22,12 @@ export async function fetchFilteredPapers(query, currentPage) {
   return response.items;
 }
 
-export async function fetchPapersByAuthor(authorId) {
-  console.log(authorId);
+export async function fetchPapersByPerson(personId) {
   return await pb.collection("papers").getFullList({
     sort: "-created",
     cache: "no-store",
-    filter: 'authors ?~ "%' + authorId + '%"',
+    filter:
+      'authors ?~ "%' + personId + '%" || supervisors ?~ "%' + personId + '%"',
   });
 }
 
@@ -35,7 +35,7 @@ export async function fetchPaper(id) {
   return await pb.collection("papers").getOne(id, { cache: "no-store" });
 }
 
-export async function fetchAuthor(id) {
+export async function fetchPerson(id) {
   return await pb.collection("person").getOne(id, { cache: "no-store" });
 }
 
@@ -67,6 +67,13 @@ export async function fetchAuthors(authorIds) {
 
   authors.sort((a, b) => a.name.localeCompare(b.name));
   return authors;
+}
+
+export async function fetchAllPersons() {
+  return await pb.collection("person").getFullList({
+    sort: "name",
+    cache: "no-store",
+  });
 }
 
 export async function fetchUsedLiterature(literatureIds) {
@@ -102,11 +109,39 @@ export async function updatePaper(paper) {
   }
 }
 
-export async function updateAuthor(author) {
+export async function updatePaperById(paperId, paper) {
   try {
-    const result = await pb.collection("person").update(author.id, author);
+    const result = await pb.collection("papers").update(paperId, paper);
 
-    revalidatePath("/authors/" + author.id);
+    revalidatePath("/papers/" + paperId);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
+export async function updatePerson(person) {
+  try {
+    const result = await pb.collection("person").update(person.id, person);
+
+    revalidatePath("/authors/" + person.id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
+export async function createPerson(json) {
+  try {
+    const result = await pb.collection("person").create(json);
+
+    console.log(result);
     return result;
   } catch (error) {
     console.error(error);

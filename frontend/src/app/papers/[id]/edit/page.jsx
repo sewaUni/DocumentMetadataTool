@@ -1,10 +1,15 @@
-import { AuthorLinks } from "@/components/papers/authorLinks";
+import { PersonLinks } from "@/components/persons/personLinks";
 import { LiteratureTable } from "@/components/papers/LiteratureTable";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { fetchPaper, updatePaper } from "@/lib/data";
+import {
+  fetchAllPersons,
+  fetchAuthors,
+  fetchPaper,
+  updatePaper,
+} from "@/lib/data";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {AuthorLinksEditable} from "@/components/papers/authorLinksEditable";
+import { PersonLinksEditable } from "@/components/persons/personLinksEditable";
 
 async function updateAction(formData) {
   "use server";
@@ -29,6 +34,9 @@ async function updateAction(formData) {
 
 export default async function EditPaperPage({ params }) {
   const paper = await fetchPaper(params.id);
+  const authors = await fetchAuthors(paper.authors);
+  const supervisors = await fetchAuthors(paper.supervisors);
+  const allPersons = await fetchAllPersons();
 
   return (
     <>
@@ -96,7 +104,12 @@ export default async function EditPaperPage({ params }) {
         ></textarea>
         <div className="flex flex-col flex-wrap items-center justify-center pb-4">
           <h2 className="py-4 text-center text-2xl font-bold">Authors</h2>
-          <AuthorLinksEditable authorIds={paper.authors} />
+          <PersonLinksEditable
+            paperIdProp={paper.id}
+            personsProp={authors}
+            otherPersonsProp={allPersons}
+            personTypeProp={"authors"}
+          />
         </div>
         <div className="flex flex-wrap items-center gap-8">
           <label className="flex flex-col">

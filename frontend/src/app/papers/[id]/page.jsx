@@ -1,5 +1,5 @@
 import { fetchPaper } from "@/lib/data";
-import { AuthorLinks } from "@/components/papers/authorLinks";
+import { PersonLinks } from "@/components/persons/personLinks";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LiteratureTable } from "@/components/papers/LiteratureTable";
 import Link from "next/link";
@@ -40,7 +40,7 @@ export default async function PaperPage({ params }) {
       <div className="flex flex-col flex-wrap items-center justify-center gap-8">
         <span>
           <h2 className="py-4 text-center text-2xl font-bold">Authors</h2>
-          <AuthorLinks authorIds={paper.authors} />
+          <PersonLinks authorIds={paper.authors} />
         </span>
         <div className="flex flex-wrap items-center gap-8">
           <span>

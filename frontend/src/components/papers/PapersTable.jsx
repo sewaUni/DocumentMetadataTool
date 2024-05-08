@@ -8,12 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import { fetchFilteredPapers, fetchPapersByAuthor } from "@/lib/data";
-import { AuthorLinks } from "@/components/papers/authorLinks";
+import { fetchFilteredPapers, fetchPapersByPerson } from "@/lib/data";
+import { PersonLinks } from "@/components/persons/personLinks";
 
-export async function PapersTable({ query, currentPage, author }) {
-  const papers = author
-    ? await fetchPapersByAuthor(author)
+export async function PapersTable({ query, currentPage, person }) {
+  const papers = person
+    ? await fetchPapersByPerson(person)
     : await fetchFilteredPapers(query, currentPage);
 
   return (
@@ -23,6 +23,7 @@ export async function PapersTable({ query, currentPage, author }) {
           <TableRow>
             <TableHead>Title</TableHead>
             <TableHead>Authors</TableHead>
+            <TableHead>Supervisors</TableHead>
             <TableHead className="text-right">Date</TableHead>
           </TableRow>
         </TableHeader>
@@ -33,7 +34,10 @@ export async function PapersTable({ query, currentPage, author }) {
                 <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
               </TableCell>
               <TableCell>
-                <AuthorLinks authorIds={paper.authors} />
+                <PersonLinks authorIds={paper.authors} />
+              </TableCell>
+              <TableCell>
+                <PersonLinks authorIds={paper.supervisors} />
               </TableCell>
               <TableCell className="text-right">
                 {new Date(paper.date).toLocaleDateString()}

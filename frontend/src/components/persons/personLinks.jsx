@@ -1,7 +1,7 @@
 import { fetchAuthors } from "@/lib/data";
 import Link from "next/link";
 
-export async function AuthorLinks({ authorIds }) {
+export async function PersonLinks({ authorIds }) {
   const authors = await fetchAuthors(authorIds);
   return (
     <div className="flex flex-row gap-1">
