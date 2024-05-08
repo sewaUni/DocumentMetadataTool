@@ -34,10 +34,10 @@ export async function PapersTable({ query, currentPage, person }) {
                 <Link href={`/papers/${paper.id}`}>{paper.title}</Link>
               </TableCell>
               <TableCell>
-                <PersonLinks authorIds={paper.authors} />
+                <PersonLinks personIds={paper.authors} />
               </TableCell>
               <TableCell>
-                <PersonLinks authorIds={paper.supervisors} />
+                <PersonLinks personIds={paper.supervisors} />
               </TableCell>
               <TableCell className="text-right">
                 {new Date(paper.date).toLocaleDateString()}

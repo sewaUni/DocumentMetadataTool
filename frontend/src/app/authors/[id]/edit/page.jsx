@@ -21,7 +21,7 @@ export default async function PersonPage({ params }) {
         <div className="flex w-full items-center justify-between gap-2 px-6">
           <div className="basis-1/6"></div>
           <input
-            className="m-4 rounded-md border p-2 text-center text-4xl font-bold"
+            className="m-4 rounded-md border bg-secondary p-2 text-center text-4xl font-bold"
             type="text"
             name="name"
             defaultValue={author.name}
@@ -43,7 +43,7 @@ export default async function PersonPage({ params }) {
             <strong>Role:</strong>
           </span>
           <input
-            className="rounded-md border p-2"
+            className="rounded-md border bg-secondary p-2"
             type="text"
             name="person_type"
             defaultValue={author.person_type}
@@ -52,7 +52,7 @@ export default async function PersonPage({ params }) {
             <strong>E-Mail:</strong>
           </span>
           <input
-            className="rounded-md border p-2"
+            className="rounded-md border bg-secondary p-2"
             type="email"
             name="email"
             defaultValue={author.email}
@@ -61,7 +61,7 @@ export default async function PersonPage({ params }) {
             <strong>Student ID:</strong>
           </span>
           <input
-            className="rounded-md border p-2"
+            className="rounded-md border bg-secondary p-2"
             type="text"
             name="student_id"
             defaultValue={author.student_id}

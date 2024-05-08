@@ -98,18 +98,18 @@ export function PersonLinksEditable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuLabel>Add Author</DropdownMenuLabel>
+              <DropdownMenuLabel>Add Person</DropdownMenuLabel>
               <DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <DialogTrigger>Add new Author</DialogTrigger>
+                  <DialogTrigger>Add new Person</DialogTrigger>
                 </DropdownMenuItem>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>Add Existing</DropdownMenuSubTrigger>
                   <DropdownMenuSubContent className="p-0">
                     <Command>
                       <CommandInput
-                        placeholder="Filter authors..."
+                        placeholder="Filter people..."
                         autoFocus={true}
                       />
                       <CommandList>
@@ -150,9 +150,9 @@ export function PersonLinksEditable({
               }}
             >
               <DialogHeader>
-                <DialogTitle>Add Author</DialogTitle>
+                <DialogTitle>Add Person</DialogTitle>
                 <DialogDescription>
-                  Add a new author to your paper.
+                  Add a new Person to your paper.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">

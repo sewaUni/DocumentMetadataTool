@@ -52,21 +52,21 @@ export async function fetchAuthorNames(authorIds) {
   return authorNames.join(", ");
 }
 
-export async function fetchAuthors(authorIds) {
-  const authors = [];
+export async function fetchPersons(personIds) {
+  const persons = [];
 
   await Promise.all(
-    authorIds.map(async (a) => {
-      const authorData = await pb.collection("person").getOne(a);
-      authors.push({
-        id: authorData.id,
-        name: authorData.name,
+    personIds.map(async (a) => {
+      const personData = await pb.collection("person").getOne(a);
+      persons.push({
+        id: personData.id,
+        name: personData.name,
       });
     }),
   );
 
-  authors.sort((a, b) => a.name.localeCompare(b.name));
-  return authors;
+  persons.sort((a, b) => a.name.localeCompare(b.name));
+  return persons;
 }
 
 export async function fetchAllPersons() {

@@ -3,7 +3,7 @@ import { LiteratureTable } from "@/components/papers/LiteratureTable";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   fetchAllPersons,
-  fetchAuthors,
+  fetchPersons,
   fetchPaper,
   updatePaper,
 } from "@/lib/data";
@@ -13,29 +13,15 @@ import { PersonLinksEditable } from "@/components/persons/personLinksEditable";
 
 async function updateAction(formData) {
   "use server";
-  // const object = {}; //todo maybe needed to update lists (Authors, Literature)
-  // formData.forEach((value, key) => {
-  //   // Reflect.has in favor of: object.hasOwnProperty(key)
-  //   if (!Reflect.has(object, key)) {
-  //     object[key] = value;
-  //     return;
-  //   }
-  //   if (!Array.isArray(object[key])) {
-  //     object[key] = [object[key]];
-  //   }
-  //   object[key].push(value);
-  // });
   const json = Object.fromEntries(formData);
-  // console.log(json);
-
   const result = await updatePaper(json); //todo could implement error handling
   redirect(`/papers/${json.id}`);
 }
 
 export default async function EditPaperPage({ params }) {
   const paper = await fetchPaper(params.id);
-  const authors = await fetchAuthors(paper.authors);
-  const supervisors = await fetchAuthors(paper.supervisors);
+  const authors = await fetchPersons(paper.authors);
+  const supervisors = await fetchPersons(paper.supervisors);
   const allPersons = await fetchAllPersons();
 
   return (
@@ -45,7 +31,7 @@ export default async function EditPaperPage({ params }) {
         <div className="flex w-full items-center justify-between gap-2 px-6">
           <div className="basis-1/6"></div>
           <input
-            className="m-4 grow rounded-md border p-2 text-center text-4xl font-bold"
+            className="m-4 grow rounded-md border bg-secondary p-2 text-center text-4xl font-bold"
             type="text"
             name="title"
             defaultValue={paper.title}
@@ -68,7 +54,7 @@ export default async function EditPaperPage({ params }) {
               <strong>Publication Date:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="date"
               name="date"
               defaultValue={new Date(paper.date).toLocaleDateString("en-CA")}
@@ -79,7 +65,7 @@ export default async function EditPaperPage({ params }) {
               <strong>Project Partner:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="text"
               name="project_partner"
               defaultValue={paper.project_partner}
@@ -90,7 +76,7 @@ export default async function EditPaperPage({ params }) {
               <strong>Course:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="text"
               name="course"
               defaultValue={paper.course}
@@ -98,7 +84,7 @@ export default async function EditPaperPage({ params }) {
           </label>
         </div>
         <textarea
-          className="h-60 w-3/5 rounded-md border px-4 py-2 text-justify text-gray-700"
+          className="h-60 w-3/5 rounded-md border bg-secondary px-4 py-2 text-justify text-gray-700"
           name="abstract"
           defaultValue={paper.abstract}
         ></textarea>
@@ -111,13 +97,22 @@ export default async function EditPaperPage({ params }) {
             personTypeProp={"authors"}
           />
         </div>
+        <div className="flex flex-col flex-wrap items-center justify-center pb-4">
+          <h2 className="py-4 text-center text-2xl font-bold">Supervisors</h2>
+          <PersonLinksEditable
+            paperIdProp={paper.id}
+            personsProp={supervisors}
+            otherPersonsProp={allPersons}
+            personTypeProp={"supervisors"}
+          />
+        </div>
         <div className="flex flex-wrap items-center gap-8">
           <label className="flex flex-col">
             <span>
               <strong>Language:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="text"
               name="language"
               defaultValue={paper.language}
@@ -128,7 +123,7 @@ export default async function EditPaperPage({ params }) {
               <strong>Methodology:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="text"
               name="methodology"
               defaultValue={paper.methodology}
@@ -141,7 +136,7 @@ export default async function EditPaperPage({ params }) {
               <strong>Pages:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="number"
               name="pages"
               defaultValue={paper.pages}
@@ -152,7 +147,7 @@ export default async function EditPaperPage({ params }) {
               <strong>Word Count:</strong>
             </span>
             <input
-              className="rounded-md border p-2"
+              className="rounded-md border bg-secondary p-2"
               type="number"
               name="word_count"
               defaultValue={paper.word_count}
