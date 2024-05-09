@@ -199,3 +199,17 @@ export async function createLiterature(json) {
     };
   }
 }
+
+export async function uploadPaper(file) {
+  try {
+    const result = await pb.collection("papers").create(file);
+    //const response = await fetch("http://127.0.0.1:8000/api/upload-paper") //todo communicate with backend
+    revalidatePath("/papers/" + result.id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 export default async function EditPaperPage({ params }) {
   const paper = await fetchPaper(params.id);
+  console.log(paper);
   const word_count = paper.word_count
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -81,7 +82,13 @@ export default async function EditPaperPage({ params }) {
       ) : (
         <></>
       )}
-      <Button className="m-4 text-xl">Download Full Paper</Button>
+      {paper.document ? ( //todo pb.files.getUrl(paper.id, paper.document)
+        <Button className="m-4 text-xl">Download Full Paper</Button>
+      ) : (
+        <Button disabled className="m-4 bg-gray-300 text-xl">
+          Download Full Paper
+        </Button>
+      )}
     </>
   );
 }
