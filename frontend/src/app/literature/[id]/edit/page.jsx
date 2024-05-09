@@ -1,4 +1,4 @@
-import { fetchPerson, updatePerson } from "@/lib/data";
+import { fetchLiterature, updateLiterature } from "@/lib/data";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { redirect } from "next/navigation";
@@ -7,29 +7,29 @@ async function updateAction(formData) {
   "use server";
   const json = Object.fromEntries(formData);
 
-  const result = await updatePerson(json);
-  redirect(`/authors/${json.id}`);
+  const result = await updateLiterature(json);
+  redirect(`/literature/${json.id}`);
 }
 
-export default async function EditPersonPage({ params }) {
-  const author = await fetchPerson(params.id);
+export default async function EditLiteraturePage({ params }) {
+  const paper = await fetchLiterature(params.id);
 
   return (
     <>
       <form className="contents w-full rounded-md border" action={updateAction}>
-        <input type="hidden" value={author.id} name="id" />
+        <input type="hidden" value={paper.id} name="id" />
         <div className="flex w-full items-center justify-between gap-2 px-6">
           <div className="basis-1/6"></div>
           <input
             className="m-4 rounded-md border bg-secondary p-2 text-center text-4xl font-bold"
             type="text"
             name="name"
-            defaultValue={author.name}
+            defaultValue={paper.title}
           />
           <div className="flex basis-1/6 content-center justify-end gap-2">
             <Link
               className={buttonVariants({ variant: "secondary" })}
-              href={`/authors/${params.id}`}
+              href={`/literature/${params.id}`}
             >
               Back
             </Link>
@@ -40,31 +40,40 @@ export default async function EditPersonPage({ params }) {
         </div>
         <div className="flex flex-row flex-wrap items-center justify-center gap-4 p-4">
           <span>
-            <strong>Role:</strong>
+            <strong>Authors:</strong>
           </span>
           <input
             className="rounded-md border bg-secondary p-2"
             type="text"
-            name="person_type"
-            defaultValue={author.person_type}
+            name="authors"
+            defaultValue={paper.authors}
           />
           <span>
-            <strong>E-Mail:</strong>
+            <strong>Publication Date:</strong>
           </span>
           <input
             className="rounded-md border bg-secondary p-2"
-            type="email"
-            name="email"
-            defaultValue={author.email}
+            type="date"
+            name="date"
+            defaultValue={new Date(paper.date).toLocaleDateString("en-CA")}
           />
           <span>
-            <strong>Student ID:</strong>
+            <strong>DOI:</strong>
           </span>
           <input
             className="rounded-md border bg-secondary p-2"
             type="text"
-            name="student_id"
-            defaultValue={author.student_id}
+            name="doi"
+            defaultValue={paper.doi}
+          />
+          <span>
+            <strong>URL:</strong>
+          </span>
+          <input
+            className="rounded-md border bg-secondary p-2"
+            type="url"
+            name="url"
+            defaultValue={paper.url}
           />
         </div>
       </form>

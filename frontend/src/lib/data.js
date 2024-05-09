@@ -170,6 +170,22 @@ export async function createPerson(json) {
   }
 }
 
+export async function updateLiterature(literature) {
+  try {
+    const result = await pb
+      .collection("literature")
+      .update(literature.id, literature);
+
+    revalidatePath("/literature/" + literature.id);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
 export async function createLiterature(json) {
   try {
     const result = await pb.collection("literature").create(json);

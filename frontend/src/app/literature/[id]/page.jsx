@@ -32,10 +32,16 @@ export default async function LiteraturePage({ params }) {
           {new Date(paper.date).toLocaleDateString()}
         </span>
         <span>
-          <strong>DOI:</strong> {paper.doi}
+          <strong>DOI:</strong>{" "}
+          <Link className="underline" href={paper.doi}>
+            {paper.doi}
+          </Link>
         </span>
         <span>
-          <strong>URL:</strong> {paper.url}
+          <strong>URL:</strong>
+          <Link className="underline" href={paper.url}>
+            {paper.url}
+          </Link>
         </span>
       </div>
 
