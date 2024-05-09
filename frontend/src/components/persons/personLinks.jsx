@@ -4,7 +4,7 @@ import Link from "next/link";
 export async function PersonLinks({ personIds }) {
   const persons = await fetchPersons(personIds);
   return (
-    <div className="flex flex-row gap-1">
+    <div className="flex flex-row flex-wrap gap-1">
       {persons.map((author) => (
         <div
           key={author.id}

@@ -39,11 +39,11 @@ export default async function EditPaperPage({ params }) {
       <p className="w-3/5 py-2 text-justify text-gray-700">{paper.abstract}</p>
       <div className="flex flex-col flex-wrap items-center justify-center gap-8 py-4">
         <div className="flex flex-col items-center py-2">
-          <span>
+          <span className="flex flex-col items-center">
             <h2 className="py-4 text-center text-2xl font-bold">Authors</h2>
             <PersonLinks personIds={paper.authors} />
           </span>
-          <span>
+          <span className="flex flex-col items-center">
             <h2 className="py-4 text-center text-2xl font-bold">Supervisors</h2>
             <PersonLinks personIds={paper.supervisors} />
           </span>
