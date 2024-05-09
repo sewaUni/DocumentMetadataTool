@@ -114,7 +114,7 @@ export function LiteratureTableEditable({
           <TableRow>
             <TableCell colSpan={4}>Total</TableCell>
             <TableCell className="text-right">{literature.length}</TableCell>
-            <TableCell>
+            <TableCell className="text-center">
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DropdownMenu
                   open={dropDownOpen}
