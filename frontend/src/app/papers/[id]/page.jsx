@@ -1,7 +1,7 @@
 import { fetchPaper } from "@/lib/data";
 import { PersonLinks } from "@/components/persons/personLinks";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { LiteratureTable } from "@/components/papers/LiteratureTable";
+import { LiteratureTable } from "@/components/literature/LiteratureTable";
 import Link from "next/link";
 import { toast } from "sonner";
 

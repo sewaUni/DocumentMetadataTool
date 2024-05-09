@@ -1,15 +1,18 @@
 import { PersonLinks } from "@/components/persons/personLinks";
-import { LiteratureTable } from "@/components/papers/LiteratureTable";
+import { LiteratureTable } from "@/components/literature/LiteratureTable";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   fetchAllPersons,
   fetchPersons,
   fetchPaper,
   updatePaper,
+  fetchUsedLiterature,
+  fetchAllLiterature,
 } from "@/lib/data";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PersonLinksEditable } from "@/components/persons/personLinksEditable";
+import { LiteratureTableEditable } from "@/components/literature/literatureTableEditable";
 
 async function updateAction(formData) {
   "use server";
@@ -23,6 +26,8 @@ export default async function EditPaperPage({ params }) {
   const authors = await fetchPersons(paper.authors);
   const supervisors = await fetchPersons(paper.supervisors);
   const allPersons = await fetchAllPersons();
+  const literature = await fetchUsedLiterature(paper.literature);
+  const allLiterature = await fetchAllLiterature();
 
   return (
     <>
@@ -158,8 +163,11 @@ export default async function EditPaperPage({ params }) {
           <h2 className="py-4 text-center text-2xl font-bold">
             Used Literature
           </h2>
-          {/* Assuming LiteratureTable component handles editing */}
-          <LiteratureTable literatureIds={paper.literature} />
+          <LiteratureTableEditable
+            paperIdProp={paper.id}
+            literatureProp={literature}
+            otherLiteratureProp={allLiterature}
+          />
         </div>
         <div className="flex w-3/5 flex-col items-center justify-center">
           <h2 className="py-4 text-center text-2xl font-bold">

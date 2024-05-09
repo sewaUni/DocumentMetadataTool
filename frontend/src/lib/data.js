@@ -31,12 +31,24 @@ export async function fetchPapersByPerson(personId) {
   });
 }
 
+export async function fetchPapersByLiterature(literatureId) {
+  return await pb.collection("papers").getFullList({
+    sort: "-created",
+    cache: "no-store",
+    filter: 'literature ?~ "%' + literatureId + '%"',
+  });
+}
+
 export async function fetchPaper(id) {
   return await pb.collection("papers").getOne(id, { cache: "no-store" });
 }
 
 export async function fetchPerson(id) {
   return await pb.collection("person").getOne(id, { cache: "no-store" });
+}
+
+export async function fetchLiterature(id) {
+  return await pb.collection("literature").getOne(id, { cache: "no-store" });
 }
 
 export async function fetchAuthorNames(authorIds) {
@@ -90,6 +102,13 @@ export async function fetchUsedLiterature(literatureIds) {
   return literature;
 }
 
+export async function fetchAllLiterature() {
+  return await pb.collection("literature").getFullList({
+    sort: "title",
+    cache: "no-store",
+  });
+}
+
 export async function fetchPaperPages() {
   const papers = await fetchAllPapers(); //todo inefficient to fetch all papers
   return Math.ceil(papers.length / PAPERS_PER_PAGE);
@@ -140,6 +159,20 @@ export async function updatePerson(person) {
 export async function createPerson(json) {
   try {
     const result = await pb.collection("person").create(json);
+
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
+export async function createLiterature(json) {
+  try {
+    const result = await pb.collection("literature").create(json);
 
     console.log(result);
     return result;

@@ -8,13 +8,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import { fetchFilteredPapers, fetchPapersByPerson } from "@/lib/data";
+import {
+  fetchFilteredPapers,
+  fetchPapersByLiterature,
+  fetchPapersByPerson,
+} from "@/lib/data";
 import { PersonLinks } from "@/components/persons/personLinks";
 
-export async function PapersTable({ query, currentPage, person }) {
-  const papers = person
-    ? await fetchPapersByPerson(person)
-    : await fetchFilteredPapers(query, currentPage);
+export async function PapersTable({ query, currentPage, person, literature }) {
+  let papers = [];
+  if (person) {
+    papers = await fetchPapersByPerson(person);
+  } else if (literature) {
+    papers = await fetchPapersByLiterature(literature);
+  } else {
+    papers = await fetchFilteredPapers(query, currentPage);
+  }
 
   return (
     <div className="w-full rounded-md border">
