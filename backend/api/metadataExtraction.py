@@ -3,7 +3,7 @@ import ollama
 import bs4
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 #todo Determine best loader for the pdfs
-from langchain_community.document_loaders import PDFPlumberLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_core.output_parsers import StrOutputParser
@@ -12,7 +12,7 @@ from langchain_core.runnables import RunnablePassthrough
 def processPaper():
     # Load paper
     #todo Load paper
-    loader = PDFPlumberLoader()
+    loader = PyPDFLoader(r'C:\Users\simon\OneDrive - Johannes Kepler Universität Linz\Dokumente\Studium\SE IE\DocumentMetadataTool\backend\title_page.pdf')
 
     pdfFile = loader.load()
     textSplitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -24,10 +24,10 @@ def processPaper():
 
     # Create question to extract metadata
     #todo Create question for metadata extraction
-    question = 'Create me a list of ...'
+    question = 'Extract me the supervisors of the project'
 
     # Call Ollama Llama3 model
-    runPrompt(question, vectorstore)
+    return runPrompt(question, vectorstore)
 
     #todo Do something with the output and return it
 

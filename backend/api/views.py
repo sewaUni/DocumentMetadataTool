@@ -1,54 +1,60 @@
-from django.shortcuts import render
+import requests
 from django.http import HttpResponse
 from django.utils import timezone
 from .serializers import PaperSerializer
 from .models import Paper
-# Create your views here.
+from .metadataExtraction import processPaper
+from .deriveInformation import deriveInformation
 
-# Function to get all papers
-def getPapers(request):
-    if request.method == 'GET':
-        #todo Get all papers
-        papers = Paper.objects.all()
+# Constants
+pockebaseURL = 'http://127.0.0.1:8090/'
 
-        # Serialize the paper data
-        serializer = PaperSerializer(papers, many=True)
-        serializedPapers = serializer.data
+# Function  to test the llm output
+def testLLM(request):
+    return HttpResponse(processPaper(), status=200)
 
-        # Send back the serialized papers
-        return HttpResponse(serializedPapers, status=200)
-    else:
-        return HttpResponse('No PDF file found', status=400)
-
-# Function to change a paper
+# Function to process an updated paper -
 def updatePaper(request):
     if request.method == 'POST':
-        #todo Update paper
+        # Get the id for the database object
+        id = request.POST.get('id')
 
+        #todo Send http request to the pocketbase database
+        # Load the object and the pdf file from the database
+        paper = requests.get(url=pockebaseURL + 'api/papers/' + id)
 
+        #todo Derive information from paper metadata
+        deriveInformation(paper=paper)
 
-        #todo Send back updated paper object
+        #todo Store updated paper in database
+        requests.post(url=pockebaseURL + 'api/papers/' + id, data=paper)
+
+        # Send back status report to frontend
         return HttpResponse(status=200)
     else:
         return HttpResponse('Corresponding paper not found in the database', status=400)
 
 
-# Function to get uploaded files
+# Function to process an uploaded paper
 def uploadPaper(request):
-    if request.method == 'POST' and request.FILES['paper']:
-        # Get the relevant data from the post request
-        pdfFile = request.FILES['paper']
-        title = request.POST.get('title', 'Untitled')
+    if request.method == 'POST':
+        # Get the id for the database object
+        id = request.POST.get('id')
 
-        # Get the upload time
-        uploadTime = timezone.now()
+        #todo Send http request to the pocketbase database
+        # Load the object and the pdf file from the database
+        paper = requests.get(url=pockebaseURL + 'api/papers/'  + id)
+        pdfFile = paper.pdfFile
 
-        # Store the model
-        paper = Paper(title=title, pdfFile=pdfFile, date=uploadTime)
-        paper.save()
+        #todo Interact with LLM
+        processPaper(pdfFile=pdfFile, paper=paper)
 
-        #todo Interact with LLM and send back metadata
+        #todo Derive information from paper metadata
+        deriveInformation(paper=paper)
+
+        #todo Store updated paper in database
+        requests.post(url=pockebaseURL + 'api/papers/' + id, data=paper)
 
         return HttpResponse(status=200)
     else:
-        return HttpResponse('No PDF file found', status=400)
+        return HttpResponse('Corresponding paper not found in the database', status=400)
