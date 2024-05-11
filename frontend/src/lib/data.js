@@ -213,3 +213,25 @@ export async function uploadPaper(file) {
     };
   }
 }
+
+export async function deletePaper(paperId) {
+  try {
+    const result = await pb.collection("papers").delete(paperId);
+
+    revalidatePath("/papers");
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
+export async function fetchPaperFile(paperId, fileName) {
+  console.log(paperId, fileName);
+  const record = await pb.collection("papers").getOne(paperId);
+
+  const url = pb.files.getUrl(paperId, fileName);
+  console.log(url);
+}

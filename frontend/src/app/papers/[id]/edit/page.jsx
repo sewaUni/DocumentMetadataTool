@@ -1,5 +1,3 @@
-import { PersonLinks } from "@/components/persons/personLinks";
-import { LiteratureTable } from "@/components/literature/LiteratureTable";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   fetchAllPersons,
@@ -8,6 +6,7 @@ import {
   updatePaper,
   fetchUsedLiterature,
   fetchAllLiterature,
+  deletePaper,
 } from "@/lib/data";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -19,6 +18,13 @@ async function updateAction(formData) {
   const json = Object.fromEntries(formData);
   const result = await updatePaper(json); //todo could implement error handling
   redirect(`/papers/${json.id}`);
+}
+
+async function deleteAction(formData) {
+  "use server";
+  const json = Object.fromEntries(formData);
+  const result = await deletePaper(json.id); //todo could implement error handling
+  redirect(`/papers`);
 }
 
 export default async function EditPaperPage({ params }) {
@@ -179,6 +185,13 @@ export default async function EditPaperPage({ params }) {
             defaultValue={paper.infos}
           ></textarea>
         </div>
+        <Button
+          formAction={deleteAction}
+          variant={"destructive"}
+          className="m-4 text-xl"
+        >
+          Delete Paper
+        </Button>
       </form>
     </>
   );
