@@ -1,8 +1,6 @@
-# See video here -> https://www.youtube.com/watch?v=O7RdEyRsatw
 import ollama
 import bs4
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-#todo Determine best loader for the pdfs
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
@@ -24,8 +22,9 @@ def processPaper():
 
     # Create question to extract metadata
     #todo Create question for metadata extraction
-    #question = 'Extract me the supervisors of the project - give me only the names splitted by ; and remove all titles and start it with Here: and then give only the names'
-    question = 'Extract me the title, submission date, authors, project partner (if available), language, abstract, methodology, course, pages and the word count - in the format title: , submission date: '
+    #todo Probably make several prompt questions
+    question = 'Extract me the supervisors of the project - give me only the names splitted by ; and remove all titles'
+    #question = 'Extract me the title, submission date, authors, project partner (if available), language, abstract, methodology, course, pages and the word count - in json format'
 
     # Create retriever and make the RAG setup
     retriever = vectorstore.as_retriever()
@@ -36,6 +35,7 @@ def processPaper():
     return runPrompt(question, formattedContext)
 
     #todo Do something with the output and return it
+    #todo Create persons and literature - or look if they are already there?
 
 # Function for executing a prompt on the model
 def runPrompt(question, context):
