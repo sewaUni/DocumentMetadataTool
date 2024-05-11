@@ -12,7 +12,7 @@ from langchain_core.runnables import RunnablePassthrough
 def processPaper():
     # Load paper
     #todo Load paper
-    loader = PyPDFLoader(r'C:\Users\simon\OneDrive - Johannes Kepler Universität Linz\Dokumente\Studium\SE IE\DocumentMetadataTool\backend\title_page.pdf')
+    loader = PyPDFLoader(r'C:\Users\simon\OneDrive - Johannes Kepler Universität Linz\Dokumente\Studium\Vorbei\Communications Engineering\PS\Seminar_paper_Ulmer_Simon_k12043331.pdf')
 
     pdfFile = loader.load()
     textSplitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -24,10 +24,16 @@ def processPaper():
 
     # Create question to extract metadata
     #todo Create question for metadata extraction
-    question = 'Extract me the supervisors of the project'
+    #question = 'Extract me the supervisors of the project - give me only the names splitted by ; and remove all titles and start it with Here: and then give only the names'
+    question = 'Extract me the title, submission date, authors, project partner (if available), language, abstract, methodology, course, pages and the word count - in the format title: , submission date: '
+
+    # Create retriever and make the RAG setup
+    retriever = vectorstore.as_retriever()
+    retrievedDocs = retriever.invoke(question)
+    formattedContext = combineDocs(retrievedDocs)
 
     # Call Ollama Llama3 model
-    return runPrompt(question, vectorstore)
+    return runPrompt(question, formattedContext)
 
     #todo Do something with the output and return it
 
@@ -37,3 +43,6 @@ def runPrompt(question, context):
     prompt = f"Question: {question}\n\nContext: {context}\n\nDo not invent anything and stick to the facts in the context"
     response = ollama.chat(model='llama3', messages=[{'role': 'user', 'content': prompt}])
     return response['message']['content']
+
+def combineDocs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
