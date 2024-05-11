@@ -11,41 +11,38 @@ class Literature():
         self.doi = doi
         self.url = url
 
+# Class for a person (either a supervisor or an author)
+class Person:
+    def __init__(self, name, person_type, id=None, email=None, student_id=None, student_role=None):
+        self.id = id
+        self.name = name
+        self.person_type = person_type
+        self.email = email
+        self.student_id = student_id
+        self.student_role = student_role
 
-class Literature(models.Model):
-    id = models.CharField(max_length=255, primary_key=True)
-    title = models.CharField(max_length=255)
-    authors = models.CharField(max_length=1000, null=True)
-    date = models.CharField(max_length=255, null=True)
-    doi = models.CharField(max_length=255, default="", null=True)
-    url = models.CharField(max_length=255, default="", null=True)
+# Class for a paper
+class Paper:
+    def __init__(self, title, date, id=None, authors=None, supervisors=None, project_partner=None,
+                 language="", abstract="", methodology=None, course="", pages=-1, word_count=-1,
+                 literature=None, document=None, infos=None):
+        self.id = id
+        self.title = title
+        self.date = date
+        self.authors = authors if authors is not None else [] # Stores the record id for the person
+        self.supervisors = supervisors if supervisors is not None else [] # Stores the record id for the person
+        self.project_partner = project_partner
+        self.language = language
+        self.abstract = abstract
+        self.methodology = methodology
+        self.course = course
+        self.pages = pages
+        self.word_count = word_count
+        self.literature = literature if literature is not None else [] # Stores the record id for the literature
+        self.document = document
+        self.infos = infos
 
-# Model for a paper
-class Paper(models.Model):
-    id = models.CharField(max_length=255, primary_key=True)
-    title = models.CharField(max_length=255)
-    date = models.DateTimeField()
-    authors = ArrayField(models.CharField(max_length=255), blank=True, null=True) # Stores the record id for the person
-    supervisors = ArrayField(models.CharField(max_length=255), blank=True, null=True) # Stores the record id for the person
-    project_partner = models.CharField(default="", max_length=255, null=True)
-    language = models.CharField(default="", max_length=255)
-    abstract = models.CharField(default="", max_length=10000)
-    methodology = models.CharField(default="", max_length=255, null=True)
-    course = models.CharField(default="", max_length=255)
-    pages = models.IntegerField(default=-1)
-    word_count = models.IntegerField(default=-1)
-    literature = ArrayField(models.CharField(max_length=255), blank=True, null=True) # Stores the record id for the literature
-    document = models.FileField(upload_to='pdf_documents/')
-    infos = models.CharField(default="", max_length=1000, null=True)
 
-# Model for a person (either a supervisor or an author)
-class Person(models.Model):
-    id = models.CharField(max_length=255, primary_key=True)
-    name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    person_type = models.CharField(max_length=255)
-    student_id = models.CharField(max_length=255, blank=True, null=True)
-    student_role = models.CharField(max_length=255, blank=True, null=True)
 
 
 

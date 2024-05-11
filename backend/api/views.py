@@ -1,19 +1,16 @@
 import requests
 import json
 from django.http import HttpResponse
-from .models import Paper, Literature, Test
-from .serializers import LiteratureSerializer
+from .models import Paper, Literature, Person
+from .serializers import serialize_object, deserialize_paper
 from .metadataExtraction import processPaper
 from .deriveInformation import deriveInformation
+from io import BytesIO
 
 # Constants
-pockebaseURL = 'http://127.0.0.1:8090/api/collections'
-
-def serialize_object(obj):
-    """
-    Serialize an object into JSON format.
-    """
-    return json.dumps(vars(obj))
+pocketbaseCollectionURL = 'http://127.0.0.1:8090/api/collections'
+pocketbaseFileURL = 'http://127.0.0.1:8090/api/files'
+header = {"Content-Type": "application/json"}
 
 # Function to test the llm output
 def testLLM(request):
@@ -21,10 +18,21 @@ def testLLM(request):
 
 # Function to the database connection
 def testDatabaseWriting(request):
-    testLiterature = Test(title='test1', authors='test1')
-    headers = {"Content-Type": "application/json"}
-    requests.post(url=pockebaseURL + '/literature/records/', headers=headers, data=serialize_object(testLiterature))
-    return HttpResponse(serialize_object(testLiterature), status=200)
+    #testLiterature = Literature(title='test3', authors='test3')
+    #requests.post(url=pockebaseURL + '/literature/records/', headers=header, data=serialize_object(testLiterature))
+    jsonTemp = requests.get(url=pocketbaseCollectionURL + '/papers/records/huu6vcywul5m1hx').text
+
+    # Deserialize JSON into a Python dictionary
+    data_dict = json.loads(jsonTemp)
+
+    # Filter out keys not present in the class constructor
+    filtered_data = {key: value for key, value in data_dict.items() if key in Paper.__init__.__code__.co_varnames}
+
+    # Map 'collectionId' to 'id'
+    filtered_data['id'] = data_dict.pop('collectionId')
+
+    paper = Paper(**filtered_data)
+    return HttpResponse(serialize_object(paper), status=200)
 
 # Function to process an updated paper -
 def updatePaper(request):
@@ -32,21 +40,26 @@ def updatePaper(request):
         # Get the id for the database object
         id = request.POST.get('id')
 
-        #todo Send http request to the pocketbase database
-        # Load the object and the pdf file from the database
-        paper = requests.get(url=pockebaseURL + '/papers/records/' + id)
+        # Load the object and the pdf file from the pocketbase database
+        response = requests.get(url=pocketbaseCollectionURL + '/papers/records/' + id)
 
-        #todo Derive information from paper metadata
-        deriveInformation(paper=paper)
+        # Check if the get request was successful
+        if response.status_code == 200:
+            jsonData = response.text
 
-        #todo Store updated paper in database
-        requests.post(url=pockebaseURL + '/papers/records/' + id, data=paper)
+            # Deserialize the json data
+            paper = deserialize_paper(jsonData)
 
-        # Send back status report to frontend
-        return HttpResponse(status=200)
-    else:
-        return HttpResponse('Corresponding paper not found in the database', status=400)
+            #todo Derive information from paper metadata
+            #paper = deriveInformation(paper=paper)
 
+            # Store updated paper in database
+            requests.post(url=pocketbaseCollectionURL + '/papers/records/' + id, headers=header, data=serialize_object(paper))
+
+            # Send back status report to frontend
+            return HttpResponse(status=200)
+        else:
+            return HttpResponse('Corresponding paper not found in the database', status=400)
 
 # Function to process an uploaded paper
 def uploadPaper(request):
@@ -54,20 +67,39 @@ def uploadPaper(request):
         # Get the id for the database object
         id = request.POST.get('id')
 
-        #todo Send http request to the pocketbase database
-        # Load the object and the pdf file from the database
-        paper = requests.get(url=pockebaseURL + '/papers/records/' + id)
-        pdfFile = paper.pdfFile
+        # Load the object and the pdf file from the pocketbase database
+        response = requests.get(url=pocketbaseCollectionURL + '/papers/records/' + id)
 
-        #todo Interact with LLM
-        processPaper(pdfFile=pdfFile, paper=paper)
+        # Check if the get request was successful
+        if response.status_code == 200:
+            jsonData = response.text
 
-        #todo Derive information from paper metadata
-        deriveInformation(paper=paper)
+            # Deserialize the json data
+            paper = deserialize_paper(jsonData)
 
-        #todo Store updated paper in database
-        requests.post(url=pockebaseURL + '/papers/records/' + id, data=paper)
+            # todo Load the pdf file from the file server
+            documentName = paper.document
+            fileResponse = request.get(url=pocketbaseFileURL + '/papers/' + id + '/' + documentName)
 
-        return HttpResponse(status=200)
-    else:
-        return HttpResponse('Corresponding paper not found in the database', status=400)
+            if fileResponse.status_code == 200:
+                pdfData = BytesIO(fileResponse.content)
+
+                # Save the PDF data to a file
+                with open('received_file.pdf', 'wb') as f:
+                    f.write(pdfData)
+
+                #todo Interact with LLM
+                paper = processPaper(pdfFile='received_file.pdf', paper=paper)
+
+                #todo Derive information from paper metadata
+                #paper = deriveInformation(paper=paper)
+
+                #todo Store updated paper in database
+                requests.post(url=pocketbaseCollectionURL + '/papers/records/' + id, headers=header, data=serialize_object(paper))
+
+                # Send back status report to frontend
+                return HttpResponse(status=200)
+            else:
+                return HttpResponse('Corresponding pdf file not found in the database', status=400)
+        else:
+            return HttpResponse('Corresponding paper not found in the database', status=400)
