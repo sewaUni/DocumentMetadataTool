@@ -14,7 +14,8 @@ header = {"Content-Type": "application/json"}
 
 # Function to test the llm output
 def testLLM(request):
-    return HttpResponse(processPaper(), status=200)
+    paper = Paper(title="Test", date="10.10.2024")
+    return HttpResponse(processPaper(paper), status=200)
 
 # Function to the database connection
 def testDatabaseWriting(request):

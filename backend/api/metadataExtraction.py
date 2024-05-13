@@ -7,13 +7,16 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-def processPaper():
+# Function to process a pdf file
+#Todo Add paper and pdf file to function parameters
+def processPaper(paper):
     # Load paper
     #todo Load paper
-    loader = PyPDFLoader(r'C:\Users\simon\OneDrive - Johannes Kepler Universität Linz\Dokumente\Studium\Vorbei\Communications Engineering\PS\Seminar_paper_Ulmer_Simon_k12043331.pdf')
+    loader = PyPDFLoader(r'C:\Users\simon\Downloads\Legacy_Projekt_anonymisiert.pdf')
 
     pdfFile = loader.load()
-    textSplitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+
+    textSplitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=2000)
     splits = textSplitter.split_documents(pdfFile)
 
     # Create Ollama embeddings and vectore store
@@ -23,8 +26,9 @@ def processPaper():
     # Create question to extract metadata
     #todo Create question for metadata extraction
     #todo Probably make several prompt questions
-    question = 'Extract me the supervisors of the project - give me only the names splitted by ; and remove all titles'
-    #question = 'Extract me the title, submission date, authors, project partner (if available), language, abstract, methodology, course, pages and the word count - in json format'
+    #question = 'Extract me the supervisors of the project - give me only the names splitted by ; and remove all titles'
+    question = 'Extract me the title, submission date, authors, project partner (if available), language, abstract (if not available then give me short summary), methodology, course for context - in json format. Do not use the source from the literature part'
+    #question = 'Extract me the whole chapter Zyklen der Methodik'
 
     # Create retriever and make the RAG setup
     retriever = vectorstore.as_retriever()
@@ -32,10 +36,15 @@ def processPaper():
     formattedContext = combineDocs(retrievedDocs)
 
     # Call Ollama Llama3 model
-    return runPrompt(question, formattedContext)
+    response = runPrompt(question, formattedContext)
 
     #todo Do something with the output and return it
     #todo Create persons and literature - or look if they are already there?
+
+    # Get the number of pages of the pdf file - pdf loader generates a document for each page and stores it into a list -> therefore extract page count with function len()
+    paper.pages = len(pdfFile)
+
+    return response
 
 # Function for executing a prompt on the model
 def runPrompt(question, context):
