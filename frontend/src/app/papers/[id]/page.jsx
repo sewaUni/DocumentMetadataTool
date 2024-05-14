@@ -3,11 +3,10 @@ import { PersonLinks } from "@/components/persons/personLinks";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LiteratureTable } from "@/components/literature/LiteratureTable";
 import Link from "next/link";
-import { toast } from "sonner";
+import DownloadButton from "@/components/papers/downloadButton";
 
 export default async function EditPaperPage({ params }) {
   const paper = await fetchPaper(params.id);
-  console.log(paper);
   const word_count = paper.word_count
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -83,7 +82,9 @@ export default async function EditPaperPage({ params }) {
         <></>
       )}
       {paper.document ? ( //todo pb.files.getUrl(paper.id, paper.document)
-        <Button className="m-4 text-xl">Download Full Paper</Button>
+        <DownloadButton paperId={paper.id} fileName={paper.document}>
+          Download Full Paper
+        </DownloadButton>
       ) : (
         <Button disabled className="m-4 bg-gray-300 text-xl">
           Download Full Paper
