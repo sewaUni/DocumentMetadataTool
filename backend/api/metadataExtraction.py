@@ -1,11 +1,10 @@
-import ollama
-import bs4
+import json
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOllama
 
 # Function to process a pdf file
 #Todo Add paper and pdf file to function parameters
@@ -16,42 +15,112 @@ def processPaper(paper):
 
     pdfFile = loader.load()
 
-    textSplitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=2000)
-    splits = textSplitter.split_documents(pdfFile)
+    # Extract te first 5 pages for the metadata extraction - all the important information metadata should be within the first 5 pages
+    firstPages = pdfFile[:5]
+
+    # Find the literature source
+    index = find_references(pdfFile)
+
+    # Extract the references
+    literature = pdfFile[index:]
+
+    # Extract pages relevant for word count - exclude references
+    textWithoutLiterature = pdfFile[:index]
+
+    textSplitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    splits = textSplitter.split_documents(firstPages)
 
     # Create Ollama embeddings and vectore store
-    embeddings = OllamaEmbeddings(model='llama3')
+    embeddings = OllamaEmbeddings(model='nomic-embed-text')
     vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 
-    # Create question to extract metadata
-    #todo Create question for metadata extraction
-    #todo Probably make several prompt questions
-    #question = 'Extract me the supervisors of the project - give me only the names splitted by ; and remove all titles'
-    question = 'Extract me the title, submission date, authors, project partner (if available), language, abstract (if not available then give me short summary), methodology, course for context - in json format. Do not use the source from the literature part'
-    #question = 'Extract me the whole chapter Zyklen der Methodik'
+    # Create question for metadata extraction
+    question = 'Extract me the title, submission_date, authors, project_partner (if available - else leave empty), supervisors (remove all titles), language, abstract (if no such chapter available - leave empty), methodology (if not available - leave empty), course - in json format. Do not invent anything and stick to the facts in the context'
 
     # Create retriever and make the RAG setup
     retriever = vectorstore.as_retriever()
-    retrievedDocs = retriever.invoke(question)
-    formattedContext = combineDocs(retrievedDocs)
+
+    llm = ChatOllama(
+        temperature=0,
+        model='llama3',
+        streaming=True,
+        top_k=10,
+        top_p=0.3,
+        num_ctx=3072,
+        verbose=False
+    )
+
+    # Create the chain
+    chain = RetrievalQA.from_llm(
+        llm=llm,
+        retriever=retriever
+    )
 
     # Call Ollama Llama3 model
-    response = runPrompt(question, formattedContext)
+    response = chain.invoke({'query': question})
 
-    #todo Do something with the output and return it
-    #todo Create persons and literature - or look if they are already there?
+    # Do something with the output and return it
+    jsonMetadata = extract_json(response['result'])
+
+    # Extract metadata from json
+    paper.title = jsonMetadata['title']
+    paper.date = jsonMetadata['submission_date']
+    paper.project_partner = jsonMetadata['project_partner']
+    paper.language = jsonMetadata['language']
+    paper.abstract = jsonMetadata['abstract']
+    paper.methodology = jsonMetadata['methodology']
+    paper.course = jsonMetadata['course']
+
+    #todo Create persons
+
+    # Search for supervisors
+
+    # Search for authors
+
+    #todo Create literature
+
 
     # Get the number of pages of the pdf file - pdf loader generates a document for each page and stores it into a list -> therefore extract page count with function len()
     paper.pages = len(pdfFile)
 
-    return response
+    # Get the number of words of the pdf file - without the references
+    paper.word_count = calculate_word_count(textWithoutLiterature)
 
-# Function for executing a prompt on the model
-def runPrompt(question, context):
-    # Create the prompt - and ensure that the llm stays within the context
-    prompt = f"Question: {question}\n\nContext: {context}\n\nDo not invent anything and stick to the facts in the context"
-    response = ollama.chat(model='llama3', messages=[{'role': 'user', 'content': prompt}])
-    return response['message']['content']
+    return paper
 
-def combineDocs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
+# Function to find the references in the pdf file
+def find_references(pdfFile):
+    for i, page in enumerate(pdfFile):
+        text = page.page_content
+        lowercaseText = text.lower()
+
+        # Check if the first 40 characters include a number, a point, "Literaturverzeichnis", "Literature", or "References",
+        # and a newline character '\n' with optional spaces in between
+        if any([char.isdigit() for char in lowercaseText[:40]]) and \
+                ("literaturverzeichnis" in lowercaseText[:40] or "literature" in lowercaseText[:40] or "references" in lowercaseText[:40]) and \
+                "\n" in lowercaseText[:40]:
+            return i
+
+    # Return 5 if no such index is found - just use everything after the metadata pages
+    return 5
+
+# Function to calculate the word count
+def calculate_word_count(pdfFile):
+    word_count = 0
+    for page in pdfFile:
+        text = page.page_content
+        words = text.split()  # Split text into words
+        word_count += len(words)   # Add the number of words
+
+    return word_count
+
+def extract_json(text):
+    # Find the start and end indices of the JSON portion
+    startIndex = text.find('{')
+    endIndex = text.rfind('}') + 1
+
+    # Extract the JSON portion
+    json_data = text[startIndex:endIndex]
+
+    # Parse the JSON data
+    return json.loads(json_data)

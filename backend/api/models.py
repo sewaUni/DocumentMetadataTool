@@ -42,6 +42,10 @@ class Paper:
         self.document = document
         self.infos = infos
 
+    def __str__(self):
+        return f"Paper: {self.title}\nDate: {self.date}\nID: {self.id}\nAuthors: {self.authors}\nSupervisors: {self.supervisors}\nProject Partner: {self.project_partner}\nLanguage: {self.language}\nAbstract: {self.abstract}\nMethodology: {self.methodology}\nCourse: {self.course}\nPages: {self.pages}\nWord Count: {self.word_count}\nLiterature: {self.literature}\nDocument: {self.document}\nInfos: {self.infos}"
+
+
 
 
 
