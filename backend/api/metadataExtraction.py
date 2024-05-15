@@ -1,10 +1,14 @@
 import json
+import requests
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOllama
+from .constants import pocketbaseCollectionURL, studentCONST, supervisorCONST, projectPartnerCONST, header
+from .models import Paper, Person, Literature
+from .serializers import serialize_object, deserialize_paper, deserialize_person, deserialize_literature
 
 # Function to process a pdf file
 #Todo Add paper and pdf file to function parameters
@@ -71,14 +75,57 @@ def processPaper(paper):
     paper.methodology = jsonMetadata['methodology']
     paper.course = jsonMetadata['course']
 
-    #todo Create persons
+    #todo How do we know if a supervisor is a project partner???
 
     # Search for supervisors
+    supervisorIDs = []
+    for supervisor in jsonMetadata["supervisors"]:
+        id = handle_person(supervisor, supervisorCONST)
+        supervisorIDs.append(id)
+
+    paper.supervisors = supervisorIDs
 
     # Search for authors
+    authorIDs = []
+    for author in jsonMetadata["authors"]:
+        id = handle_person(author, studentCONST)
+        authorIDs.append(id)
 
-    #todo Create literature
+    paper.authors = authorIDs
 
+    # Handle literature
+    #todo Not every resource gets extracted - fix this
+    splits = textSplitter.split_documents(literature)
+
+    # Create Ollama embeddings and vectore store
+    embeddings = OllamaEmbeddings(model='nomic-embed-text')
+    vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
+
+    # Create question for metadata extraction
+    question = 'Extract me the title, date, authors, doi (if not available - leave empty), url (if not available - leave empty) - in json format. Do not invent anything and stick to the facts in the context'
+
+    # Create retriever and make the RAG setup
+    retriever = vectorstore.as_retriever()
+
+    # Create the chain
+    chain = RetrievalQA.from_llm(
+        llm=llm,
+        retriever=retriever
+    )
+
+    # Call Ollama Llama3 model
+    response = chain.invoke({'query': question})
+
+    # Extract literature objects from response
+    literatureObjects = extract_literature_objects(response['result'])
+
+    # Search for literature
+    literatureIDs = []
+    for l in literatureObjects:
+        id = handle_literature(l)
+        literatureIDs.append(id)
+
+    paper.literature = literatureIDs
 
     # Get the number of pages of the pdf file - pdf loader generates a document for each page and stores it into a list -> therefore extract page count with function len()
     paper.pages = len(pdfFile)
@@ -114,6 +161,7 @@ def calculate_word_count(pdfFile):
 
     return word_count
 
+# Function to extract json objects from the llm response for the metadata
 def extract_json(text):
     # Find the start and end indices of the JSON portion
     startIndex = text.find('{')
@@ -124,3 +172,75 @@ def extract_json(text):
 
     # Parse the JSON data
     return json.loads(json_data)
+
+# Function to extract literature objects form the llm response
+def extract_literature_objects(text):
+    startIndex = text.find('[')
+    endIndex = text.rfind(']') + 1
+
+    # Extract the JSON portion
+    jsonData = text[startIndex:endIndex]
+
+    # Parse the JSON string into a Python object (list of dictionaries)
+    literatureData = json.loads(jsonData)
+
+    # Create instances of the Literature class for each dictionary in the list
+    literatureObjects = []
+    for item in literatureData:
+        literature_object = Literature(
+            title=item['title'],
+            authors=item['authors'],
+            date=item['date'],
+            doi=item['doi'],
+            url=item['url']
+        )
+        literatureObjects.append(literature_object)
+
+    return literatureObjects
+
+# Function to check if a person is already present in the database - if not create it - and return their id
+def handle_person(name, personType):
+    # Make http request to get the person
+    jsonTemp = requests.get(url=pocketbaseCollectionURL + '/person/records', params={'filter': f'name="{name}"&&person_type="{personType}"'}).text
+
+    # Deserialize JSON into a Python dictionary
+    dataDict = json.loads(jsonTemp)
+
+    # Extract the 'items' part
+    items = dataDict.get('items')
+
+    # Check if the items part is empty -> create the person
+    if len(items) == 0:
+        newPerson = Person(name=name, person_type=personType)
+        response = requests.post(url=pocketbaseCollectionURL + '/person/records/', headers=header, data=serialize_object(newPerson)).text
+        dict = json.loads(response)
+        return dict.get('id')
+
+    # Convert the list into a dictionary
+    dict = items[0]
+
+    # Get the value of the 'id' key from the dictionary
+    return dict['id']
+
+# Function to check if the source paper is already present in the database - if not create it - and return their id
+def handle_literature(literature):
+    # Make http request to get the person
+    jsonTemp = requests.get(url=pocketbaseCollectionURL + '/literature/records', params={'filter': f'title="{literature.title}"'}).text
+
+    # Deserialize JSON into a Python dictionary
+    dataDict = json.loads(jsonTemp)
+
+    # Extract the 'items' part
+    items = dataDict.get('items')
+
+    # Check if the items part is empty -> create the literature
+    if len(items) == 0:
+        response = requests.post(url=pocketbaseCollectionURL + '/literature/records/', headers=header, data=serialize_object(literature)).text
+        dict = json.loads(response)
+        return dict.get('id')
+
+    # Convert the list into a dictionary
+    dict = items[0]
+
+    # Get the value of the 'id' key from the dictionary
+    return dict['id']
