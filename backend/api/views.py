@@ -1,12 +1,14 @@
 import json
 import requests
 from django.http import HttpResponse
+from langchain_community.document_loaders import PyPDFLoader
 from .models import Paper, Literature, Person
 from .serializers import serialize_object, deserialize_paper
 from .metadataExtraction import processPaper
 from .deriveInformation import deriveInformation
 from io import BytesIO
-from .constants import pocketbaseCollectionURL, pocketbaseFileURL, header
+from .constants import pocketbaseCollectionURL, pocketbaseFileURL, header, filePath
+from django.views.decorators.csrf import csrf_exempt
 
 # Function to test the llm output
 def testLLM(request):
@@ -47,7 +49,7 @@ def testDatabaseWriting(request):
 
     paper = Person(**filtered_data)
     return HttpResponse(serialize_object(paper), status=200)
-    """
+
     name = "Hallo h"
     role = "Student"
     # Make http request to get the person
@@ -71,8 +73,37 @@ def testDatabaseWriting(request):
 
     # Get the value of the 'collectionId' key from the dictionary
     return HttpResponse(dict['id'], status=200)
+    """
+    # Load the object and the pdf file from the pocketbase database
+    response = requests.get(url=pocketbaseCollectionURL + '/papers/records/kb02zxe89jalyrj')
 
-# Function to process an updated paper -
+
+    # Check if the get request was successful
+    if response.status_code == 200:
+        jsonData = response.text
+
+        data = json.loads(jsonData)
+
+        # Deserialize the json data
+        paper = deserialize_paper(jsonData)
+
+        # todo Load the pdf file from the file server
+        documentName = paper.document
+
+        fileResponse = requests.get(url=pocketbaseFileURL + '/papers/kb02zxe89jalyrj/' + documentName + '?download=1')
+
+        pdfData = BytesIO(fileResponse.content)
+
+        with open(filePath, "wb") as pdf_file:
+            pdf_file.write(pdfData.getvalue())
+
+        loader = PyPDFLoader(filePath)
+        pdfFile = loader.load()
+
+        return HttpResponse(len(pdfFile), status=200)
+
+# Function to process an updated paper
+@csrf_exempt
 def updatePaper(request):
     if request.method == 'POST':
         # Get the id for the database object
@@ -92,7 +123,7 @@ def updatePaper(request):
             #paper = deriveInformation(paper=paper)
 
             # Store updated paper in database
-            requests.post(url=pocketbaseCollectionURL + '/papers/records/' + id, headers=header, data=serialize_object(paper))
+            requests.patch(url=pocketbaseCollectionURL + '/papers/records/' + id, headers=header, data=serialize_object(paper))
 
             # Send back status report to frontend
             return HttpResponse(status=200)
@@ -100,6 +131,7 @@ def updatePaper(request):
             return HttpResponse('Corresponding paper not found in the database', status=400)
 
 # Function to process an uploaded paper
+@csrf_exempt
 def uploadPaper(request):
     if request.method == 'POST':
         # Get the id for the database object
@@ -117,23 +149,24 @@ def uploadPaper(request):
 
             # todo Load the pdf file from the file server
             documentName = paper.document
-            fileResponse = request.get(url=pocketbaseFileURL + '/papers/' + id + '/' + documentName)
+            fileResponse = requests.get(url=pocketbaseFileURL + '/papers/' + id + '/' + documentName + '?download=1')
 
             if fileResponse.status_code == 200:
                 pdfData = BytesIO(fileResponse.content)
 
                 # Save the PDF data to a file
-                with open('received_file.pdf', 'wb') as f:
-                    f.write(pdfData)
+                with open(filePath, "wb") as f:
+                    f.write(pdfData.getvalue())
 
-                #todo Interact with LLM
-                paper = processPaper(pdfFile='received_file.pdf', paper=paper)
+                # Interact with LLM
+                paper = processPaper(paper=paper, path=filePath)
 
                 #todo Derive information from paper metadata
                 #paper = deriveInformation(paper=paper)
 
-                #todo Store updated paper in database
-                requests.post(url=pocketbaseCollectionURL + '/papers/records/' + id, headers=header, data=serialize_object(paper))
+                # Store updated paper in database
+                #todo Not all data gets correctly imported into database
+                requests.patch(url=pocketbaseCollectionURL + '/papers/records/' + id, headers=header, data=serialize_object(paper))
 
                 # Send back status report to frontend
                 return HttpResponse(status=200)

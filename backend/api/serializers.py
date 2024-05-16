@@ -8,38 +8,51 @@ def serialize_object(obj):
 # Function to deserialize JSON format data of a paper
 def deserialize_paper(jsonData):
     # Deserialize JSON into a Python dictionary
-    data_dict = json.loads(jsonData)
+    data = json.loads(jsonData)
 
     # Filter out keys not present in the class constructor
-    filtered_data = {key: value for key, value in data_dict.items() if key in Paper.__init__.__code__.co_varnames}
-
-    # Map 'collectionId' to 'id'
-    filtered_data['id'] = data_dict.pop('collectionId')
-
-    return filtered_data
+    return Paper(
+        title=data["title"],
+        date=data["date"],
+        id=data["id"],
+        authors=data["authors"],
+        supervisors=data["supervisors"],
+        project_partner=data["project_partner"],
+        language=data["language"],
+        abstract=data["abstract"],
+        methodology=data["methodology"],
+        course=data["course"],
+        pages=data["pages"],
+        word_count=data["word_count"],
+        literature=data["literature"],
+        document=data["document"],
+        infos=data["infos"]
+    )
 
 # Function to deserialize JSON format data of a paper
 def deserialize_person(jsonData):
     # Deserialize JSON into a Python dictionary
-    data_dict = json.loads(jsonData)
+    data = json.loads(jsonData)
 
-    # Filter out keys not present in the class constructor
-    filtered_data = {key: value for key, value in data_dict.items() if key in Person.__init__.__code__.co_varnames}
-
-    # Map 'collectionId' to 'id'
-    filtered_data['id'] = data_dict.pop('collectionId')
-
-    return filtered_data
+    return Person(
+        name=data["name"],
+        person_type=data["person_type"],
+        id=data["id"],
+        email=data["email"],
+        student_id=data["student_id"],
+        student_role=data.get["student_role"]
+    )
 
 # Function to deserialize JSON format data of a paper
 def deserialize_literature(jsonData):
     # Deserialize JSON into a Python dictionary
-    data_dict = json.loads(jsonData)
+    data = json.loads(jsonData)
 
-    # Filter out keys not present in the class constructor
-    filtered_data = {key: value for key, value in data_dict.items() if key in Literature.__init__.__code__.co_varnames}
-
-    # Map 'collectionId' to 'id'
-    filtered_data['id'] = data_dict.pop('collectionId')
-
-    return filtered_data
+    return Literature(
+        title=data["title"],
+        id=data["id"],
+        authors=data["authors"],
+        date=data["date"],
+        doi=data["doi"],
+        url=data["url"]
+    )
