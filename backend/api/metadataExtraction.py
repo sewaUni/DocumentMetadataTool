@@ -73,9 +73,9 @@ def processPaper(paper):
     paper.language = jsonMetadata['language']
     paper.abstract = jsonMetadata['abstract']
     paper.methodology = jsonMetadata['methodology']
-    paper.course = jsonMetadata['course']
 
-    #todo How do we know if a supervisor is a project partner???
+    # Check for course
+    paper.course = check_course(jsonMetadata['course'])
 
     # Search for supervisors
     supervisorIDs = []
@@ -244,3 +244,24 @@ def handle_literature(literature):
 
     # Get the value of the 'id' key from the dictionary
     return dict['id']
+
+# Function to check the course
+def check_course(course):
+    course = course.replace('-', ' ').lower()
+
+    if course in 'it projekt' or course in 'it project':
+        return 'PJ IT-Projekt Wirtschaftsinformatik'
+
+    if course in 'ps information engineering':
+        return 'PS Information Engineering & Management'
+
+    if course in 'se information engineering &':
+        return 'SE Information Engineering & Management'
+
+    if course in 'se information engineering':
+        return 'SE Information Engineering'
+
+    if course in 'se seminar in':
+        return 'SE Seminar in Planung und Gestaltung der Digitalisierung'
+
+    return None
