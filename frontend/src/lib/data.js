@@ -1,5 +1,6 @@
 import pb from "@/lib/pocketbase";
 import { revalidatePath } from "next/cache";
+import { console } from "next/dist/compiled/@edge-runtime/primitives";
 
 const PAPERS_PER_PAGE = 10;
 
@@ -241,7 +242,12 @@ export async function fetchCardData() {
   const numberOfAuthors = (await pb.collection("person").getFullList()).length;
   const numberOfLiterature = (await pb.collection("literature").getFullList())
     .length;
-  const averagePages = 42; //todo calculate average pages
+
+  //calculate average pages
+  const papers = await fetchAllPapers();
+  const totalPages = papers.reduce((acc, paper) => acc + paper.pages, 0);
+  const averagePages = parseFloat((totalPages / numberOfPapers).toFixed(2));
+
   return {
     numberOfPapers,
     numberOfAuthors,
@@ -295,4 +301,117 @@ export async function fetchMethodologyStatistics() {
 
   statistics.sort((a, b) => b.count - a.count);
   return statistics;
+}
+
+export async function fetchPageStatisticsPerCourse() {
+  const papers = await fetchAllPapers();
+  const courseData = papers.reduce((acc, paper) => {
+    const course = paper.course;
+    if (acc[course]) {
+      acc[course].totalPages += paper.pages;
+      acc[course].count++;
+    } else {
+      acc[course] = { totalPages: paper.pages, count: 1 };
+    }
+    return acc;
+  }, {});
+
+  const statistics = Object.keys(courseData).map((method) => {
+    const { totalPages, count } = courseData[method];
+    const averagePages = parseFloat((totalPages / count).toFixed(2));
+    return { name: method === "" ? "N/A" : method, averagePages: averagePages };
+  });
+
+  statistics.sort((a, b) => b.averagePages - a.averagePages);
+  return statistics;
+}
+
+export async function fetchPapersPerYearStatistics() {
+  const papers = await fetchAllPapers();
+  const yearCounts = papers.reduce((acc, paper) => {
+    const year = new Date(paper.date).getFullYear();
+    if (acc[year]) {
+      // Increment the count if it exists
+      acc[year]++;
+    } else {
+      // Initialize the count if it does not exist
+      acc[year] = 1;
+    }
+    return acc;
+  }, {});
+
+  const statistics = Object.keys(yearCounts)
+    .map((year) => {
+      return {
+        year: year,
+        count: yearCounts[year],
+      };
+    })
+    .filter((stat) => stat.year !== "NaN");
+
+  statistics.sort((a, b) => a.year - b.year);
+
+  const years = statistics.map((item) => parseInt(item.year));
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+
+  const completeData = [];
+  for (let year = minYear; year <= maxYear; year++) {
+    const existingItem = statistics.find(
+      (item) => parseInt(item.year) === year,
+    );
+    if (existingItem) {
+      completeData.push(existingItem);
+    } else {
+      completeData.push({ year: year.toString(), count: 0 });
+    }
+  }
+
+  return completeData;
+}
+
+export async function fetchTopFiveLiterature() {
+  const papers = await fetchAllPapers();
+  const literatureCounts = papers.reduce((acc, paper) => {
+    const literature = paper.literature;
+    literature.map((lit) => {
+      if (acc[lit]) {
+        // Increment the count if it exists
+        acc[lit]++;
+      } else {
+        // Initialize the count if it does not exist
+        acc[lit] = 1;
+      }
+    });
+    return acc;
+  }, {});
+
+  let statistics = Object.keys(literatureCounts).map((literature) => {
+    return {
+      id: literature,
+      count: literatureCounts[literature],
+    };
+  });
+
+  statistics.sort((a, b) => b.count - a.count);
+  statistics = statistics.slice(0, 5);
+
+  const completeData = [];
+  await Promise.all(
+    statistics.map(async (lit) => {
+      const literatureData = await pb.collection("literature").getOne(lit.id);
+      // console.log(literatureData);
+      completeData.push({
+        id: lit.id,
+        title: literatureData.title,
+        authors: literatureData.authors,
+        count: lit.count,
+      });
+    }),
+  );
+  completeData.sort((a, b) => b.count - a.count);
+
+  console.log(statistics);
+  console.log(completeData);
+  return completeData;
 }

@@ -3,7 +3,7 @@ import { fetchMethodologyStatistics } from "@/lib/data";
 export async function MethodologyList() {
   const methodologies = await fetchMethodologyStatistics();
   return (
-    <div className="h-96 space-y-8 overflow-x-auto pr-2">
+    <div className="space-y-8 overflow-x-auto pr-2">
       {methodologies.map((method) => (
         <ListItem key={method.name} name={method.name} number={method.count} />
       ))}

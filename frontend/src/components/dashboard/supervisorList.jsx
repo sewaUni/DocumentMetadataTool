@@ -1,4 +1,5 @@
 import { fetchSupervisorStatistics } from "@/lib/data";
+import Link from "next/link";
 
 export async function SupervisorList() {
   const supervisors = await fetchSupervisorStatistics();
@@ -7,6 +8,7 @@ export async function SupervisorList() {
       {supervisors.map((supervisor) => (
         <ListItem
           key={supervisor.id}
+          id={supervisor.id}
           name={supervisor.name}
           email={supervisor.email}
           number={supervisor.papers}
@@ -16,11 +18,16 @@ export async function SupervisorList() {
   );
 }
 
-function ListItem({ name, email, number }) {
+function ListItem({ id, name, email, number }) {
   return (
     <div className="flex items-center">
       <div className="ml-4 space-y-1">
-        <p className="text-sm font-medium leading-none">{name}</p>
+        <Link
+          className="line-clamp-1 text-sm font-medium underline"
+          href={`/authors/${id}`}
+        >
+          {name}
+        </Link>
         <p className="text-sm text-muted-foreground">{email}</p>
       </div>
       <div className="ml-auto font-medium">{number}</div>

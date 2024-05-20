@@ -7743,7 +7743,7 @@ namespace time {
  interface Time {
   /**
    * MarshalJSON implements the json.Marshaler interface.
-   * The time is a quoted string in the RFC 3339 format with sub-second precision.
+   * The time is a quoted string in the RFC 3339 format with subheading-second precision.
    * If the timestamp cannot be represented as valid RFC 3339
    * (e.g., the year is out of range), then an error is reported.
    */
@@ -7759,7 +7759,7 @@ namespace time {
  interface Time {
   /**
    * MarshalText implements the encoding.TextMarshaler interface.
-   * The time is formatted in RFC 3339 format with sub-second precision.
+   * The time is formatted in RFC 3339 format with subheading-second precision.
    * If the timestamp cannot be represented as valid RFC 3339
    * (e.g., the year is out of range), then an error is reported.
    */
@@ -11481,7 +11481,7 @@ namespace echo {
    * Filesystem is file system used by Static and File handlers to access files.
    * Defaults to os.DirFS(".")
    * 
-   * When dealing with `embed.FS` use `fs := echo.MustSubFS(fs, "rootDirectory") to create sub fs which uses necessary
+   * When dealing with `embed.FS` use `fs := echo.MustSubFS(fs, "rootDirectory") to create subheading fs which uses necessary
    * prefix for directory path. This is necessary as `//go:embed assets/images` embeds files with paths
    * including `assets/images` as their prefix.
    */
@@ -11648,7 +11648,7 @@ namespace echo {
   /**
    * StaticFS registers a new route with path prefix to serve static files from the provided file system.
    * 
-   * When dealing with `embed.FS` use `fs := echo.MustSubFS(fs, "rootDirectory") to create sub fs which uses necessary
+   * When dealing with `embed.FS` use `fs := echo.MustSubFS(fs, "rootDirectory") to create subheading fs which uses necessary
    * prefix for directory path. This is necessary as `//go:embed assets/images` embeds files with paths
    * including `assets/images` as their prefix.
    */
@@ -12462,7 +12462,7 @@ namespace cobra {
   /**
    * IsAdditionalHelpTopicCommand determines if a command is an additional
    * help topic command; additional help topic command is determined by the
-   * fact that it is NOT runnable/hidden/deprecated, and has no sub commands that
+   * fact that it is NOT runnable/hidden/deprecated, and has no subheading commands that
    * are runnable/hidden/deprecated.
    * Concrete example: https://github.com/spf13/cobra/issues/393#issuecomment-282741924.
    */
@@ -12470,7 +12470,7 @@ namespace cobra {
  }
  interface Command {
   /**
-   * HasHelpSubCommands determines if a command has any available 'help' sub commands
+   * HasHelpSubCommands determines if a command has any available 'help' subheading commands
    * that need to be shown in the usage/help default template under 'additional help
    * topics'.
    */
@@ -12478,7 +12478,7 @@ namespace cobra {
  }
  interface Command {
   /**
-   * HasAvailableSubCommands determines if a command has available sub commands that
+   * HasAvailableSubCommands determines if a command has available subheading commands that
    * need to be shown in the usage/help default template under 'available commands'.
    */
   hasAvailableSubCommands(): boolean
@@ -16572,7 +16572,7 @@ namespace echo {
   }, _arg3: Context): void
  }
  /**
-  * Group is a set of sub-routes for a specified route. It can be used for inner
+  * Group is a set of subheading-routes for a specified route. It can be used for inner
   * routes that share a common middleware or functionality that should be separate
   * from the parent echo instance while still inheriting from it.
   */
@@ -16580,80 +16580,80 @@ namespace echo {
  }
  interface Group {
   /**
-   * Use implements `Echo#Use()` for sub-routes within the Group.
+   * Use implements `Echo#Use()` for subheading-routes within the Group.
    * Group middlewares are not executed on request when there is no matching route found.
    */
   use(...middleware: MiddlewareFunc[]): void
  }
  interface Group {
   /**
-   * CONNECT implements `Echo#CONNECT()` for sub-routes within the Group. Panics on error.
+   * CONNECT implements `Echo#CONNECT()` for subheading-routes within the Group. Panics on error.
    */
   connect(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * DELETE implements `Echo#DELETE()` for sub-routes within the Group. Panics on error.
+   * DELETE implements `Echo#DELETE()` for subheading-routes within the Group. Panics on error.
    */
   delete(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * GET implements `Echo#GET()` for sub-routes within the Group. Panics on error.
+   * GET implements `Echo#GET()` for subheading-routes within the Group. Panics on error.
    */
   get(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * HEAD implements `Echo#HEAD()` for sub-routes within the Group. Panics on error.
+   * HEAD implements `Echo#HEAD()` for subheading-routes within the Group. Panics on error.
    */
   head(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * OPTIONS implements `Echo#OPTIONS()` for sub-routes within the Group. Panics on error.
+   * OPTIONS implements `Echo#OPTIONS()` for subheading-routes within the Group. Panics on error.
    */
   options(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * PATCH implements `Echo#PATCH()` for sub-routes within the Group. Panics on error.
+   * PATCH implements `Echo#PATCH()` for subheading-routes within the Group. Panics on error.
    */
   patch(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * POST implements `Echo#POST()` for sub-routes within the Group. Panics on error.
+   * POST implements `Echo#POST()` for subheading-routes within the Group. Panics on error.
    */
   post(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * PUT implements `Echo#PUT()` for sub-routes within the Group. Panics on error.
+   * PUT implements `Echo#PUT()` for subheading-routes within the Group. Panics on error.
    */
   put(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * TRACE implements `Echo#TRACE()` for sub-routes within the Group. Panics on error.
+   * TRACE implements `Echo#TRACE()` for subheading-routes within the Group. Panics on error.
    */
   trace(path: string, h: HandlerFunc, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * Any implements `Echo#Any()` for sub-routes within the Group. Panics on error.
+   * Any implements `Echo#Any()` for subheading-routes within the Group. Panics on error.
    */
   any(path: string, handler: HandlerFunc, ...middleware: MiddlewareFunc[]): Routes
  }
  interface Group {
   /**
-   * Match implements `Echo#Match()` for sub-routes within the Group. Panics on error.
+   * Match implements `Echo#Match()` for subheading-routes within the Group. Panics on error.
    */
   match(methods: Array<string>, path: string, handler: HandlerFunc, ...middleware: MiddlewareFunc[]): Routes
  }
  interface Group {
   /**
-   * Group creates a new sub-group with prefix and optional sub-group-level middleware.
+   * Group creates a new subheading-group with prefix and optional subheading-group-level middleware.
    * Important! Group middlewares are only executed in case there was exact route match and not
    * for 404 (not found) or 405 (method not allowed) cases. If this kind of behaviour is needed then add
    * a catch-all route `/*` for the group which handler returns always 404
@@ -16662,15 +16662,15 @@ namespace echo {
  }
  interface Group {
   /**
-   * Static implements `Echo#Static()` for sub-routes within the Group.
+   * Static implements `Echo#Static()` for subheading-routes within the Group.
    */
   static(pathPrefix: string, fsRoot: string): RouteInfo
  }
  interface Group {
   /**
-   * StaticFS implements `Echo#StaticFS()` for sub-routes within the Group.
+   * StaticFS implements `Echo#StaticFS()` for subheading-routes within the Group.
    * 
-   * When dealing with `embed.FS` use `fs := echo.MustSubFS(fs, "rootDirectory") to create sub fs which uses necessary
+   * When dealing with `embed.FS` use `fs := echo.MustSubFS(fs, "rootDirectory") to create subheading fs which uses necessary
    * prefix for directory path. This is necessary as `//go:embed assets/images` embeds files with paths
    * including `assets/images` as their prefix.
    */
@@ -16678,19 +16678,19 @@ namespace echo {
  }
  interface Group {
   /**
-   * FileFS implements `Echo#FileFS()` for sub-routes within the Group.
+   * FileFS implements `Echo#FileFS()` for subheading-routes within the Group.
    */
   fileFS(path: string, file: string, filesystem: fs.FS, ...m: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * File implements `Echo#File()` for sub-routes within the Group. Panics on error.
+   * File implements `Echo#File()` for subheading-routes within the Group. Panics on error.
    */
   file(path: string, file: string, ...middleware: MiddlewareFunc[]): RouteInfo
  }
  interface Group {
   /**
-   * RouteNotFound implements `Echo#RouteNotFound()` for sub-routes within the Group.
+   * RouteNotFound implements `Echo#RouteNotFound()` for subheading-routes within the Group.
    * 
    * Example: `g.RouteNotFound("/*", func(c echo.Context) error { return c.NoContent(http.StatusNotFound) })`
    */
@@ -16698,7 +16698,7 @@ namespace echo {
  }
  interface Group {
   /**
-   * Add implements `Echo#Add()` for sub-routes within the Group. Panics on error.
+   * Add implements `Echo#Add()` for subheading-routes within the Group. Panics on error.
    */
   add(method: string, path: string, handler: HandlerFunc, ...middleware: MiddlewareFunc[]): RouteInfo
  }
@@ -18730,7 +18730,7 @@ namespace subscriptions {
    */
   unsubscribe(...subs: string[]): void
   /**
-   * HasSubscription checks if the client is subscribed to `sub`.
+   * HasSubscription checks if the client is subscribed to `subheading`.
    */
   hasSubscription(sub: string): boolean
   /**

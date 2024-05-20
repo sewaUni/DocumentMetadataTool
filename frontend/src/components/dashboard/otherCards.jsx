@@ -6,15 +6,31 @@ export default async function OtherCardWrapper() {
     await fetchCardData();
   return (
     <>
-      <CardSkeleton title="Total Papers" value={numberOfPapers} />
-      <CardSkeleton title="Total Authors" value={numberOfAuthors} />
-      <CardSkeleton title="Total Literature" value={numberOfLiterature} />
-      <CardSkeleton title="Average pages" value={averagePages} />
+      <CardSkeleton
+        title="Total Papers"
+        value={numberOfPapers}
+        subheading={"All Papers tracked"}
+      />
+      <CardSkeleton
+        title="Total Authors"
+        value={numberOfAuthors}
+        subheading={"Total number of students"}
+      />
+      <CardSkeleton
+        title="Total Literature"
+        value={numberOfLiterature}
+        subheading={"All tracked literature used"}
+      />
+      <CardSkeleton
+        title="Average pages"
+        value={averagePages}
+        subheading={"Average Pages per Paper"}
+      />
     </>
   );
 }
 
-function CardSkeleton({ title, value }) {
+function CardSkeleton({ title, value, subheading }) {
   return (
     <Card>
       <CardHeader>
@@ -22,7 +38,7 @@ function CardSkeleton({ title, value }) {
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
-        <p className="text-xs text-muted-foreground">Subheading for {title}</p>
+        <p className="text-xs text-muted-foreground">{subheading}</p>
       </CardContent>
     </Card>
   );
