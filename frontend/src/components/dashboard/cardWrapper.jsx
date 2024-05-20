@@ -1,7 +1,7 @@
 import { fetchCardData } from "@/lib/data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default async function OtherCardWrapper() {
+export default async function CardWrapper() {
   const { numberOfPapers, numberOfAuthors, numberOfLiterature, averagePages } =
     await fetchCardData();
   return (
