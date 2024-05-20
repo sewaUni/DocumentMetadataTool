@@ -9,7 +9,7 @@ export default async function CardWrapper() {
       <CardSkeleton
         title="Total Papers"
         value={numberOfPapers}
-        subheading={"All Papers tracked"}
+        subheading={"All papers tracked"}
       />
       <CardSkeleton
         title="Total Authors"
@@ -22,9 +22,9 @@ export default async function CardWrapper() {
         subheading={"All tracked literature used"}
       />
       <CardSkeleton
-        title="Average pages"
+        title="Average Pages"
         value={averagePages}
-        subheading={"Average Pages per Paper"}
+        subheading={"Average pages per paper"}
       />
     </>
   );
