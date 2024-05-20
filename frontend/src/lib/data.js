@@ -249,3 +249,50 @@ export async function fetchCardData() {
     averagePages,
   };
 }
+
+export async function fetchSupervisorStatistics() {
+  const supervisors = await pb.collection("person").getFullList({
+    cache: "no-store",
+    filter: 'person_type="Supervisor"',
+  });
+  const statistics = [];
+
+  await Promise.all(
+    supervisors.map(async (supervisor) => {
+      const papers = await fetchPapersByPerson(supervisor.id);
+      statistics.push({
+        id: supervisor.id,
+        name: supervisor.name,
+        email: supervisor.email,
+        papers: papers.length,
+      });
+    }),
+  );
+
+  statistics.sort((a, b) => b.papers - a.papers);
+  return statistics;
+}
+
+export async function fetchMethodologyStatistics() {
+  const papers = await fetchAllPapers();
+  const methodCounts = papers.reduce((acc, paper) => {
+    if (acc[paper.methodology]) {
+      // Increment the count if it exists
+      acc[paper.methodology]++;
+    } else {
+      // Initialize the count if it does not exist
+      acc[paper.methodology] = 1;
+    }
+    return acc;
+  }, {});
+
+  const statistics = Object.keys(methodCounts).map((method) => {
+    return {
+      name: method === "" ? "N/A" : method,
+      count: methodCounts[method],
+    };
+  });
+
+  statistics.sort((a, b) => b.count - a.count);
+  return statistics;
+}
