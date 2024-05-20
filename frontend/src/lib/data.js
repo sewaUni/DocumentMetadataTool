@@ -235,3 +235,17 @@ export async function fetchPaperFile(paperId, fileName) {
   const url = pb.files.getUrl(paperId, fileName);
   console.log(url);
 }
+
+export async function fetchCardData() {
+  const numberOfPapers = (await pb.collection("papers").getFullList()).length;
+  const numberOfAuthors = (await pb.collection("person").getFullList()).length;
+  const numberOfLiterature = (await pb.collection("literature").getFullList())
+    .length;
+  const averagePages = 42; //todo calculate average pages
+  return {
+    numberOfPapers,
+    numberOfAuthors,
+    numberOfLiterature,
+    averagePages,
+  };
+}
