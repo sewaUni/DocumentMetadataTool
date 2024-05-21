@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AuthStatus from "@/components/auth/authStatus";
 
 async function searchAction(formData) {
   "use server";
@@ -52,10 +52,7 @@ export default function NavBar() {
         </form>
       </div>
       <div>
-        <Avatar>
-          <AvatarImage src="https://github.com/koracs.png" alt="@koracs" />
-          <AvatarFallback>FS</AvatarFallback>
-        </Avatar>
+        <AuthStatus />
       </div>
     </header>
   );

@@ -411,7 +411,7 @@ export async function fetchTopFiveLiterature() {
   );
   completeData.sort((a, b) => b.count - a.count);
 
-  console.log(statistics);
-  console.log(completeData);
+  // console.log(statistics);
+  // console.log(completeData);
   return completeData;
 }

@@ -16,7 +16,7 @@ export default function PaperPagination({ totalPages }) {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  console.log("currentPage: ", currentPage + " totalPages: ", totalPages);
+  // console.log("currentPage: ", currentPage + " totalPages: ", totalPages);
 
   const createPageURL = (pageNumber) => {
     const params = new URLSearchParams(searchParams);
