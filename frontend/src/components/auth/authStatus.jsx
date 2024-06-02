@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React, { use } from "react";
-import { pbClient } from "@/lib/pocketbase";
+import { pb, pbClient } from "@/lib/pocketbase";
 import { cookies } from "next/headers";
 import Logout from "@/components/auth/logout";
 import {
@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+
+const isLoggedIn = pb.authStore.isValid;
 
 const getUserInitials = async () => {
   const cookieStore = cookies();
@@ -43,7 +45,9 @@ export default function AuthStatus() {
       <DropdownMenuContent>
         <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Edit student accounts</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={"/auth/edit"}>Edit student accounts</Link>
+        </DropdownMenuItem>
         <Logout />
       </DropdownMenuContent>
     </DropdownMenu>
