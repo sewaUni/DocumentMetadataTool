@@ -13,6 +13,10 @@ import { redirect } from "next/navigation";
 import { PersonLinksEditable } from "@/components/persons/personLinksEditable";
 import { LiteratureTableEditable } from "@/components/literature/literatureTableEditable";
 
+export const metadata = {
+  title: "Edit Paper",
+};
+
 async function updateAction(formData) {
   "use server";
   const json = Object.fromEntries(formData);

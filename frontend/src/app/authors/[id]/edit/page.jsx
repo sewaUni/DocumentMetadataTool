@@ -3,6 +3,10 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Edit Author",
+};
+
 async function updateAction(formData) {
   "use server";
   const json = Object.fromEntries(formData);

@@ -4,6 +4,10 @@ import { PapersTable } from "@/components/papers/PapersTable";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
+export const metadata = {
+  title: "Literature",
+};
+
 export default async function LiteraturePage({ params }) {
   const paper = await fetchLiterature(params.id);
 

@@ -8,6 +8,10 @@ import PagesPerCourseCard from "@/components/dashboard/pagesPerCourseCard";
 import { fetchPapersPerYearStatistics } from "@/lib/data";
 import { LiteratureList } from "@/components/dashboard/literatureList";
 
+export const metadata = {
+  title: "Dashboard",
+};
+
 export default async function DashboardPage() {
   return (
     <>

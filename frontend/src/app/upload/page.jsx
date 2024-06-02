@@ -1,5 +1,9 @@
 import { InputFile } from "@/components/ui/FileInput";
 
+export const metadata = {
+  title: "Upload",
+};
+
 export default function UploadPage() {
   return (
     <>

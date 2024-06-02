@@ -2,6 +2,10 @@ import { Suspense } from "react";
 import { UserTable } from "@/components/auth/userTable";
 import AddUser from "@/components/auth/addUser";
 
+export const metadata = {
+  title: "Admin Overview",
+};
+
 export default async function UserOverview() {
   return (
     <>
