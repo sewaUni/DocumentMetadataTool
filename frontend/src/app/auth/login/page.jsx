@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
-  const route = useRouter();
+  const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
@@ -27,7 +27,8 @@ export default function LoginPage() {
       }
       const data = await response.json();
       if (data?.token) {
-        route.push("/");
+        router.refresh();
+        router.push("/");
       } else {
         setError("Failed to authenticate user");
       }
@@ -41,9 +42,9 @@ export default function LoginPage() {
       <h1 className={"p-6 text-4xl font-bold"}>Login</h1>
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Username / Email</Label>
           <Input
-            type="email"
+            // type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value || "")}

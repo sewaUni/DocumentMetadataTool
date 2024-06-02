@@ -2,6 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import AuthStatus from "@/components/auth/authStatus";
+import { cookies } from "next/headers";
+import { pbClient } from "@/lib/pocketbase";
+import { Suspense, use } from "react";
 
 async function searchAction(formData) {
   "use server";
@@ -9,7 +12,16 @@ async function searchAction(formData) {
   redirect(`/papers?query=${search}`);
 }
 
+const getUser = async () => {
+  const cookieStore = cookies();
+
+  const result = await pbClient.getUser(cookieStore);
+
+  return result;
+};
+
 export default function NavBar() {
+  const user = use(getUser());
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -25,18 +37,22 @@ export default function NavBar() {
         >
           Upload
         </Link>
-        <Link
-          href="/papers"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Overview
-        </Link>
-        <Link
-          href="/dashboard"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Dashboard
-        </Link>
+        {user?.isAdmin && (
+          <>
+            <Link
+              href="/papers"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Overview
+            </Link>
+            <Link
+              href="/dashboard"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Dashboard
+            </Link>
+          </>
+        )}
       </nav>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <form className="ml-auto flex-1 sm:flex-initial" action={searchAction}>
@@ -52,7 +68,9 @@ export default function NavBar() {
         </form>
       </div>
       <div>
-        <AuthStatus />
+        <Suspense>
+          <AuthStatus user={user} />
+        </Suspense>
       </div>
     </header>
   );

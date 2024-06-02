@@ -35,7 +35,12 @@ export async function LiteratureTable({ literatureIds }) {
               </TableCell>
               <TableCell>{paper.authors}</TableCell>
               <TableCell>{new Date(paper.date).toLocaleDateString()}</TableCell>
-              <TableCell>{paper.doi}</TableCell>
+              <TableCell>
+                {" "}
+                <Link className="underline" href={paper.doi}>
+                  {paper.doi}
+                </Link>
+              </TableCell>
               <TableCell>
                 <Link className="underline" href={paper.url}>
                   {paper.url}

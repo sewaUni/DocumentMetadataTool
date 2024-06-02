@@ -429,7 +429,7 @@ export async function createUser(json) {
     json.passwordConfirm = json.password;
     const result = await pb.collection("users").create(json);
 
-    revalidatePath("/auth/edit");
+    revalidatePath("/admin");
   } catch (error) {
     console.error(error);
     return {
@@ -442,7 +442,7 @@ export async function deleteUser(userId) {
   try {
     const result = await pb.collection("users").delete(userId);
 
-    revalidatePath("/auth/edit");
+    revalidatePath("/admin");
     return result;
   } catch (error) {
     console.error(error);

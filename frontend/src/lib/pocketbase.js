@@ -37,7 +37,6 @@ export class DatabaseClient {
   }
 
   async isAuthenticated(cookieStore) {
-    //todo maybe rebuild with pockebase authStore
     const cookie = cookieStore.get("pb_auth");
     if (!cookie) {
       return false;
@@ -45,6 +44,16 @@ export class DatabaseClient {
 
     this.client.authStore.loadFromCookie(cookie?.value || "");
     return this.client.authStore.isValid || false;
+  }
+
+  async isAdmin(cookieStore) {
+    const cookie = cookieStore.get("pb_auth");
+    if (!cookie) {
+      return false;
+    }
+
+    this.client.authStore.loadFromCookie(cookie?.value || "");
+    return this.client.authStore.model.isAdmin || false;
   }
 
   async getUser(cookieStore) {
