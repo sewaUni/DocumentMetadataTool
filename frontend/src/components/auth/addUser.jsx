@@ -68,7 +68,6 @@ export default function AddUser() {
                 defaultValue=""
                 className="col-span-3"
                 type="email"
-                required
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
