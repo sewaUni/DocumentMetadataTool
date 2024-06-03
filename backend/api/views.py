@@ -147,7 +147,7 @@ def uploadPaper(request):
             # Deserialize the json data
             paper = deserialize_paper(jsonData)
 
-            # todo Load the pdf file from the file server
+            # Load the pdf file from the file server
             documentName = paper.document
             fileResponse = requests.get(url=pocketbaseFileURL + '/papers/' + id + '/' + documentName + '?download=1')
 

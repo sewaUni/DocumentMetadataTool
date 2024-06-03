@@ -11,11 +11,8 @@ from .models import Paper, Person, Literature
 from .serializers import serialize_object, deserialize_paper, deserialize_person, deserialize_literature
 
 # Function to process a pdf file
-#Todo Add paper and pdf file to function parameters
 def processPaper(paper, path):
     # Load paper
-    #path = r'C:\Users\simon\Downloads\Legacy_Projekt_anonymisiert.pdf'
-    #todo Load paper
     loader = PyPDFLoader(path)
 
     pdfFile = loader.load()
