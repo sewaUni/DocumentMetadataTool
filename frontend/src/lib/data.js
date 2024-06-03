@@ -415,3 +415,39 @@ export async function fetchTopFiveLiterature() {
   // console.log(completeData);
   return completeData;
 }
+
+export async function fetchStudentUsers() {
+  return await pb.collection("users").getFullList({
+    cache: "no-store",
+    filter: "isAdmin=false",
+  });
+}
+
+export async function createUser(json) {
+  try {
+    json.emailVisibility = true;
+    json.passwordConfirm = json.password;
+    const result = await pb.collection("users").create(json);
+
+    revalidatePath("/admin");
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}
+
+export async function deleteUser(userId) {
+  try {
+    const result = await pb.collection("users").delete(userId);
+
+    revalidatePath("/admin");
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+}

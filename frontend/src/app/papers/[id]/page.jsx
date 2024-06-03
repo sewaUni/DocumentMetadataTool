@@ -5,6 +5,10 @@ import { LiteratureTable } from "@/components/literature/LiteratureTable";
 import Link from "next/link";
 import DownloadButton from "@/components/papers/downloadButton";
 
+export const metadata = {
+  title: "Papers",
+};
+
 export default async function EditPaperPage({ params }) {
   const paper = await fetchPaper(params.id);
   const word_count = paper.word_count

@@ -14,14 +14,8 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
-const getUserInitials = async () => {
-  const cookieStore = cookies();
-  return await pbClient.getUser(cookieStore);
-};
-
-export default function AuthStatus() {
+export default function AuthStatus({ user }) {
   //todo component doesnt update state, maybe use client component
-  const user = use(getUserInitials());
   if (user === false)
     return (
       <Link className={buttonVariants()} href="/auth/login">
@@ -32,18 +26,26 @@ export default function AuthStatus() {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarFallback>
+          <AvatarFallback
+            className={user.isAdmin ? "border-2 border-green-600" : ""}
+          >
             {user.name
               ?.split(" ")
               .map((word) => word[0])
               .join("")}
-          </AvatarFallback>{" "}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          {user.isAdmin ? user.name + " (Admin)" : user.name}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Edit student accounts</DropdownMenuItem>
+        {user.isAdmin && (
+          <DropdownMenuItem>
+            <Link href={"/admin"}>Edit student accounts</Link>
+          </DropdownMenuItem>
+        )}
         <Logout />
       </DropdownMenuContent>
     </DropdownMenu>

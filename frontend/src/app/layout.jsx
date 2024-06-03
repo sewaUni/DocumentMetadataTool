@@ -6,7 +6,10 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Document Metadata Tool",
+  title: {
+    template: "%s | Document Metadata Tool",
+    default: "Document Metadata Tool",
+  },
   description: "A tool for extracting metadata from documents",
 };
 

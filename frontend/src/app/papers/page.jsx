@@ -7,6 +7,10 @@ import PaperPagination from "@/components/papers/PaperPagination";
 import { fetchPaperPages } from "@/lib/data";
 import { Upload } from "lucide-react";
 
+export const metadata = {
+  title: "Papers",
+};
+
 export default async function PapersPage({ searchParams }) {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
