@@ -74,6 +74,10 @@ def testDatabaseWriting(request):
     # Get the value of the 'collectionId' key from the dictionary
     return HttpResponse(dict['id'], status=200)
     """
+
+
+    return HttpResponse('test', status=200)
+
     # Load the object and the pdf file from the pocketbase database
     response = requests.get(url=pocketbaseCollectionURL + '/papers/records/kb02zxe89jalyrj')
 
