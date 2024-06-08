@@ -2,21 +2,6 @@ version: '3.9'
 
 services:
   web:
-    build: .
-    command: python manage.py runserver 127.0.0.1:8000
-    volumes:
-      - .:/app
+    image: metaanalysis
     ports:
       - "8000:8000"
-    depends_on:
-      - ollama
-
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-
-volumes:
-  ollama_data:
