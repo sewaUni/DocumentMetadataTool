@@ -5,10 +5,7 @@ import { Button } from "@/components/ui/button";
 import { uploadAction } from "@/components/upload/actions";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
-
-const initialState = {
-  message: "",
-};
+import { LoaderCircle } from "lucide-react";
 
 export function InputFile() {
   return (
@@ -51,7 +48,8 @@ export function SubmitButton() {
 
   return (
     <Button type="submit" className="w-full" disabled={pending}>
-      Upload
+      {pending ? "Processing..." : "Upload"}
+      {pending && <LoaderCircle className="ml-2 h-4 w-4 animate-spin" />}
     </Button>
   );
 }
