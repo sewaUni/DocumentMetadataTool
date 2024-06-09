@@ -32,10 +32,10 @@ export default async function DashboardPage() {
         </Card>
         <Card className="col-span-1">
           <CardHeader>
-            <CardTitle>Papers per Supervisor</CardTitle>
+            <CardTitle>Top 5 Literature used</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <SupervisorList />
+            <LiteratureList />
           </CardContent>
         </Card>
         <Card className="col-span-1">
@@ -49,10 +49,10 @@ export default async function DashboardPage() {
         <PagesPerCourseCard />
         <Card className="col-span-1">
           <CardHeader>
-            <CardTitle>Top 5 Literature used</CardTitle>
+            <CardTitle>Papers per Supervisor</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <LiteratureList />
+            <SupervisorList />
           </CardContent>
         </Card>
       </div>

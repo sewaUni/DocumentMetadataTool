@@ -4,7 +4,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export function DashboardGraph({ data }) {
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height={380}>
       <BarChart data={data}>
         <XAxis
           dataKey="year"
@@ -18,6 +18,7 @@ export function DashboardGraph({ data }) {
           fontSize={12}
           tickLine={false}
           axisLine={false}
+          allowDecimals={false}
           tickFormatter={(value) => `${value}`}
         />
         <Bar

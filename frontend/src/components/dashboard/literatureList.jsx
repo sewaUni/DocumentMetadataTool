@@ -4,7 +4,7 @@ import Link from "next/link";
 export async function LiteratureList() {
   const literature = await fetchTopFiveLiterature();
   return (
-    <div className="h-80 space-y-8 overflow-x-auto pr-2">
+    <div className="h-96 space-y-8 overflow-x-auto pr-2">
       {literature.map((lit) => (
         <ListItem
           key={lit.title}

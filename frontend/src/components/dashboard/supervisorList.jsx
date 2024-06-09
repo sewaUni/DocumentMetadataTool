@@ -4,7 +4,7 @@ import Link from "next/link";
 export async function SupervisorList() {
   const supervisors = await fetchSupervisorStatistics();
   return (
-    <div className="h-96 space-y-8 overflow-x-auto pr-2">
+    <div className="h-80 space-y-8 overflow-x-auto pr-2">
       {supervisors.map((supervisor) => (
         <ListItem
           key={supervisor.id}
