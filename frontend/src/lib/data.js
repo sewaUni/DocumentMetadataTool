@@ -213,7 +213,7 @@ export async function uploadPaper(file) {
       },
     });
     revalidatePath("/papers/" + result.id);
-    redirect("/papers/" + result.id);
+    // redirect("/papers/" + result.id);
     return response;
   } catch (error) {
     console.error(error);

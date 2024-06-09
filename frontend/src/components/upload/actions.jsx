@@ -7,5 +7,5 @@ export async function uploadAction(formData) {
 
   const result = await uploadPaper(formData);
   if (result.error) return { error: result.error };
-  redirect(`/papers/${result.id}`);
+  redirect(`/papers/${result.id}/edit`);
 }
