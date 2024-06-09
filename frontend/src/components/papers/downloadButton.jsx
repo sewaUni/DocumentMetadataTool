@@ -17,5 +17,9 @@ export default function DownloadButton({ paperId, fileName }) {
     document.body.removeChild(downloadLink);
   };
 
-  return <Button onClick={handleClick}>Download Full Paper</Button>;
+  return (
+    <Button className="m-4 text-xl" size={"lg"} onClick={handleClick}>
+      Download Full Paper
+    </Button>
+  );
 }

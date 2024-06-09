@@ -27,7 +27,7 @@ export default function AuthStatus({ user }) {
       <DropdownMenuTrigger>
         <Avatar>
           <AvatarFallback
-            className={user.isAdmin ? "border-2 border-green-600" : ""}
+            className={user.isAdmin ? "border-2 border-primary" : ""}
           >
             {user.name
               ?.split(" ")

@@ -90,7 +90,7 @@ export default async function EditPaperPage({ params }) {
           Download Full Paper
         </DownloadButton>
       ) : (
-        <Button disabled className="m-4 bg-gray-300 text-xl">
+        <Button disabled className="m-4 bg-gray-300 text-xl" size={"lg"}>
           Download Full Paper
         </Button>
       )}

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { pbClient } from "@/lib/pocketbase";
 
 export async function middleware(request) {
-  console.log(`[middleware] ${request.method} ${request.url}`);
+  // console.log(`[middleware] ${request.method} ${request.url}`);
   const isLoggedIn = await pbClient.isAuthenticated(request.cookies);
   const isAdmin = await pbClient.isAdmin(request.cookies);
   if (

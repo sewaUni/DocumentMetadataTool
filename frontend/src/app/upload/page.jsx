@@ -1,4 +1,4 @@
-import { InputFile } from "@/components/ui/FileInput";
+import { InputFile } from "@/components/upload/FileInput";
 
 export const metadata = {
   title: "Upload",
