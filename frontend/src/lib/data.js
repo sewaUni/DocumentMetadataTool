@@ -1,7 +1,6 @@
 import pb from "@/lib/pocketbase";
 import { revalidatePath } from "next/cache";
 import { console } from "next/dist/compiled/@edge-runtime/primitives";
-import { redirect } from "next/navigation";
 
 const PAPERS_PER_PAGE = 10;
 
@@ -205,12 +204,11 @@ export async function createLiterature(json) {
 export async function uploadPaper(file) {
   try {
     const result = await pb.collection("papers").create(file);
+    const formData = new FormData();
+    formData.append("id", result.id);
     const response = await fetch("http://127.0.0.1:8000/api/upload-paper", {
       method: "POST",
-      body: JSON.stringify({ id: result.id }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: formData,
     });
     revalidatePath("/papers/" + result.id);
     // redirect("/papers/" + result.id);
