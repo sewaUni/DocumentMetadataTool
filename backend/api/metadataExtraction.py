@@ -49,7 +49,8 @@ def processPaper(paper, path):
         top_k=10,
         top_p=0.3,
         num_ctx=3072,
-        verbose=False
+        verbose=False,
+        keep_alive=0
     )
 
     # Create the chain
