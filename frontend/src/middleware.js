@@ -7,7 +7,7 @@ export async function middleware(request) {
   const isAdmin = await pbClient.isAdmin(request.cookies);
   if (
     request.nextUrl.pathname &&
-    request.nextUrl.pathname.startsWith("/auth")
+    request.nextUrl.pathname.startsWith("/auth/")
   ) {
     if (isLoggedIn) {
       return NextResponse.redirect(new URL("/", request.url));
