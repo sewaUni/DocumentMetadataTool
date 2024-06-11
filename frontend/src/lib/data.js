@@ -206,26 +206,22 @@ export async function uploadPaper(file) {
     const result = await pb.collection("papers").create(file);
     const formData = new FormData();
     formData.append("id", result.id);
-    const response = await fetch("https://mock.httpstatus.io/500");
-    // const response = await fetch("http://127.0.0.1:8000/api/upload-paper", {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    const response = await fetch("http://127.0.0.1:8000/api/upload-paper", {
+       method: "POST",
+       body: formData,
+    });
     if (response?.ok) {
       revalidatePath("/papers/" + result.id);
       return result;
     } else {
-      console.log(`HTTP Response Code: ${response?.status}`);
-      console.log(`HTTP Response Text: ${response?.statusText}`);
-      throw new Error({
-        status: response?.status,
-        statusText: response?.statusText,
-      });
+      console.log(`Backend Response Code: ${response?.status}`);
+      console.log(`Backend Response Text: ${response?.statusText}`);
+      throw new Error(response?.status.toString());
     }
   } catch (error) {
     console.error(error);
     return {
-      error: error,
+      error: error.message,
     };
   }
 }

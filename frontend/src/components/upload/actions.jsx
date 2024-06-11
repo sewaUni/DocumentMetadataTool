@@ -7,10 +7,6 @@ export async function uploadAction(formData) {
 
   const result = await uploadPaper(formData);
   console.log(result);
-  if (result?.error)
-    return {
-      status: result.error.status,
-      statusText: result.error.statusText,
-    };
+  if (result?.error)    return result;
   else redirect(`/papers/${result.id}/edit`);
 }
