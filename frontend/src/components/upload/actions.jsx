@@ -6,6 +6,11 @@ export async function uploadAction(formData) {
   formData.set("title", formData.get("document").name);
 
   const result = await uploadPaper(formData);
-  if (result.error) return { error: result.error };
-  redirect(`/papers/${result.id}/edit`);
+  console.log(result);
+  if (result?.error)
+    return {
+      status: result.error.status,
+      statusText: result.error.statusText,
+    };
+  else redirect(`/papers/${result.id}/edit`);
 }

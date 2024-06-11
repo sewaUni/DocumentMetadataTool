@@ -13,8 +13,8 @@ export function InputFile() {
       action={async (formData) => {
         const response = await uploadAction(formData);
         response.error
-          ? toast.error(response.error, {
-              description: "Please try again.",
+          ? toast.error(response.status, {
+              description: response.statusText,
             })
           : toast("File uploaded successfully");
       }}
