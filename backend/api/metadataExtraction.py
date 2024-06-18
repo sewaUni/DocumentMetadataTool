@@ -37,7 +37,7 @@ def processPaper(paper, path):
     vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 
     # Create question for metadata extraction
-    question = 'Extract me the title, submission_date, authors, project_partner (if available - else leave empty), supervisors (remove all titles), language, abstract (if no such chapter available - leave empty), methodology (if not available - leave empty), course - in json format. Do not invent anything and stick to the facts in the context'
+    question = 'Extract me the title, submission_date (format should be YYYY-MM-DDTHH:MM:SSZ), authors, project_partner (if available - else leave empty), supervisors (remove all titles), language, abstract (if no such chapter available - leave empty), methodology (if not available - leave empty), course - in json format. Do not invent anything and stick to the facts in the context'
 
     # Create retriever and make the RAG setup
     retriever = vectorstore.as_retriever()
@@ -101,7 +101,7 @@ def processPaper(paper, path):
     vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 
     # Create question for metadata extraction
-    question = 'Extract me the title, date, authors, doi (if not available - leave empty), url (if not available - leave empty) - in json format. Do not invent anything and stick to the facts in the context'
+    question = 'Extract me the title, date (format should be YYYY-MM-DDTHH:MM:SSZ), authors, doi (if not available - leave empty), url (if not available - leave empty) - in json format. Do not invent anything and stick to the facts in the context'
 
     # Create retriever and make the RAG setup
     retriever = vectorstore.as_retriever()
